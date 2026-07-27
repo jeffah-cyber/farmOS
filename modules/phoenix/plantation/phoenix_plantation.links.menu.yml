@@ -1,0 +1,6 @@
+phoenix_plantation.dashboard:
+  title: 'Phoenix Plantation'
+  description: 'Open the Phoenix Plantation dashboard.'
+  route_name: phoenix_plantation.dashboard
+  parent: system.admin
+  weight: 20
