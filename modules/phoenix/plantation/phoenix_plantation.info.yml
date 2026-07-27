@@ -1,0 +1,7 @@
+name: Phoenix Plantation
+type: module
+description: Provides oil palm plantation management features for Phoenix OS.
+package: Phoenix OS
+core_version_requirement: ^11
+dependencies:
+  - farm:farm_entity
