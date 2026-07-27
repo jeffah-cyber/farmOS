@@ -1,1 +1,5 @@
 site/
+
+# Local Docker development
+docker/db/
+docker/www/
