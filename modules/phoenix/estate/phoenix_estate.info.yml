@@ -1,0 +1,7 @@
+name: Phoenix Estate
+type: module
+description: Adds Estate as a land classification for Phoenix OS.
+package: Phoenix OS
+core_version_requirement: ^11
+dependencies:
+  - farm:farm_land

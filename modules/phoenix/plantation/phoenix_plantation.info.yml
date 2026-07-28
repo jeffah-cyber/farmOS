@@ -5,3 +5,4 @@ package: Phoenix OS
 core_version_requirement: ^11
 dependencies:
   - farm:farm_entity
+  - farm:farm_land
