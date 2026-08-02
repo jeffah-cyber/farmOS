@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Hooks for the Phoenix Plantation module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function phoenix_plantation_theme(): array {
+  return [
+    'phoenix_dashboard' => [
+      'variables' => [
+        'estate_count' => 0,
+        'block_count' => 0,
+        'estate_rows' => [],
+      ],
+      'template' => 'phoenix-dashboard',
+    ],
+  ];
+}

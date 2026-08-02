@@ -36,42 +36,10 @@ final class DashboardController extends ControllerBase {
     $data = $this->dashboardService->getDashboardData();
 
     return [
-      'intro' => [
-        '#markup' => '<p>Live operational summary for Phoenix estates.</p>',
-      ],
-
-      'summary' => [
-        '#type' => 'container',
-        '#attributes' => [
-          'class' => ['phoenix-dashboard-summary'],
-        ],
-        'estates' => [
-          '#markup' => '<h2>Total Estates: ' .
-            $data['estate_count'] .
-            '</h2>',
-        ],
-        'blocks' => [
-          '#markup' => '<h2>Plantation Blocks: ' .
-            $data['block_count'] .
-            '</h2>',
-        ],
-      ],
-
-      'estate_heading' => [
-        '#markup' => '<h2>Estate Portfolio</h2>',
-      ],
-
-      'estate_table' => [
-        '#type' => 'table',
-        '#header' => [
-          $this->t('Estate'),
-          $this->t('Phoenix Code'),
-          $this->t('Lifecycle'),
-        ],
-        '#rows' => $data['estate_rows'],
-        '#empty' => $this->t('No estates have been created yet.'),
-      ],
-
+      '#theme' => 'phoenix_dashboard',
+      '#estate_count' => $data['estate_count'],
+      '#block_count' => $data['block_count'],
+      '#estate_rows' => $data['estate_rows'],
       '#cache' => [
         'tags' => ['asset_list'],
         'contexts' => ['user.permissions'],

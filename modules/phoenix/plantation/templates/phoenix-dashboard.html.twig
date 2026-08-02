@@ -1,0 +1,47 @@
+<div class="phoenix-dashboard">
+
+  <header class="phoenix-dashboard__header">
+    <h1>Phoenix OS Dashboard</h1>
+    <p>Live operational summary for Phoenix estates.</p>
+  </header>
+
+  <section class="phoenix-dashboard__summary">
+    <article class="phoenix-dashboard__card">
+      <span class="phoenix-dashboard__label">Total Estates</span>
+      <strong class="phoenix-dashboard__value">{{ estate_count }}</strong>
+    </article>
+
+    <article class="phoenix-dashboard__card">
+      <span class="phoenix-dashboard__label">Plantation Blocks</span>
+      <strong class="phoenix-dashboard__value">{{ block_count }}</strong>
+    </article>
+  </section>
+
+  <section class="phoenix-dashboard__portfolio">
+    <h2>Estate Portfolio</h2>
+
+    {% if estate_rows %}
+      <table>
+        <thead>
+          <tr>
+            <th>Estate</th>
+            <th>Phoenix Code</th>
+            <th>Lifecycle</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for estate in estate_rows %}
+            <tr>
+              <td>{{ estate.name }}</td>
+              <td>{{ estate.code }}</td>
+              <td>{{ estate.lifecycle }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No estates have been created yet.</p>
+    {% endif %}
+  </section>
+
+</div>
