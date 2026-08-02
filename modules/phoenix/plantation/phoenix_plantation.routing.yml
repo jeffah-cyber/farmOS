@@ -1,7 +1,7 @@
 phoenix_plantation.dashboard:
-  path: '/phoenix/plantation'
+  path: '/admin/phoenix/dashboard'
   defaults:
-    _controller: '\Drupal\phoenix_plantation\Controller\PhoenixPlantationController::dashboard'
-    _title: 'Phoenix Plantation'
+    _controller: '\Drupal\phoenix_plantation\Controller\DashboardController::dashboard'
+    _title: 'Phoenix Dashboard'
   requirements:
-    _permission: 'access content'
+    _permission: 'access administration pages'

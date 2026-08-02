@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - phoenix_plantation
+name: 'Estate Lifecycle'
+vid: estate_lifecycle
+description: 'Lifecycle stages used to describe the development and production status of a Phoenix estate.'
+weight: 0
+new_revision: false

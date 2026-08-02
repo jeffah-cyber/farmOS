@@ -2,29 +2,156 @@
 
 declare(strict_types=1);
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
+
 /**
  * @file
- * Installation hooks for the Phoenix Plantation module.
+ * Installation and update hooks for Phoenix Plantation.
  */
 
 /**
- * Implements hook_install().
+ * Lifecycle stages in their intended order.
+ *
+ * @return string[]
+ *   Lifecycle labels.
  */
-function phoenix_plantation_install(): void {
-  $display_repository = \Drupal::service('entity_display.repository');
+function phoenix_plantation_lifecycle_stages(): array {
+  return [
+    'Prospect',
+    'Land under negotiation',
+    'Land acquired',
+    'Survey completed',
+    'Land preparation',
+    'Infrastructure development',
+    'Nursery ready',
+    'Planting',
+    'Immature plantation',
+    'Early production',
+    'Mature production',
+    'Peak production',
+    'Replanting',
+    'Archived',
+  ];
+}
 
-  $form_display = $display_repository->getFormDisplay('asset', 'land');
+/**
+ * Creates missing Estate Lifecycle terms.
+ */
+function phoenix_plantation_create_lifecycle_terms(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+  foreach (phoenix_plantation_lifecycle_stages() as $weight => $name) {
+    $existing = $storage->loadByProperties([
+      'vid' => 'estate_lifecycle',
+      'name' => $name,
+    ]);
+
+    if (!$existing) {
+      Term::create([
+        'vid' => 'estate_lifecycle',
+        'name' => $name,
+        'weight' => $weight,
+      ])->save();
+    }
+  }
+}
+
+/**
+ * Configures Phoenix fields on Land forms and displays.
+ */
+function phoenix_plantation_configure_land_displays(): void {
+  $repository = \Drupal::service('entity_display.repository');
+
+  $form_display = $repository->getFormDisplay('asset', 'land');
   $form_display->setComponent('field_phoenix_code', [
     'type' => 'string_textfield',
     'weight' => 5,
   ]);
+  $form_display->setComponent('field_estate_lifecycle', [
+    'type' => 'options_select',
+    'weight' => 6,
+  ]);
   $form_display->save();
 
-  $view_display = $display_repository->getViewDisplay('asset', 'land');
+  $view_display = $repository->getViewDisplay('asset', 'land');
   $view_display->setComponent('field_phoenix_code', [
     'type' => 'string',
     'label' => 'above',
     'weight' => 5,
   ]);
+  $view_display->setComponent('field_estate_lifecycle', [
+    'type' => 'entity_reference_label',
+    'label' => 'above',
+    'weight' => 6,
+    'settings' => [
+      'link' => false,
+    ],
+  ]);
   $view_display->save();
+}
+
+/**
+ * Implements hook_install().
+ */
+function phoenix_plantation_install(): void {
+  phoenix_plantation_create_lifecycle_terms();
+  phoenix_plantation_configure_land_displays();
+}
+
+/**
+ * Adds Estate Lifecycle support to existing installations.
+ */
+function phoenix_plantation_update_10001(): string {
+  if (!Vocabulary::load('estate_lifecycle')) {
+    Vocabulary::create([
+      'vid' => 'estate_lifecycle',
+      'name' => 'Estate Lifecycle',
+      'description' => 'Lifecycle stages used to describe the development and production status of a Phoenix estate.',
+    ])->save();
+  }
+
+  if (!FieldStorageConfig::loadByName('asset', 'field_estate_lifecycle')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_estate_lifecycle',
+      'entity_type' => 'asset',
+      'type' => 'entity_reference',
+      'cardinality' => 1,
+      'translatable' => true,
+      'settings' => [
+        'target_type' => 'taxonomy_term',
+      ],
+    ])->save();
+  }
+
+  if (!FieldConfig::loadByName('asset', 'land', 'field_estate_lifecycle')) {
+    FieldConfig::create([
+      'field_name' => 'field_estate_lifecycle',
+      'entity_type' => 'asset',
+      'bundle' => 'land',
+      'label' => 'Estate Lifecycle',
+      'description' => 'Select the current lifecycle stage for an Estate land asset.',
+      'required' => false,
+      'settings' => [
+        'handler' => 'default:taxonomy_term',
+        'handler_settings' => [
+          'target_bundles' => [
+            'estate_lifecycle' => 'estate_lifecycle',
+          ],
+          'sort' => [
+            'field' => 'weight',
+            'direction' => 'ASC',
+          ],
+          'auto_create' => false,
+        ],
+      ],
+    ])->save();
+  }
+
+  phoenix_plantation_create_lifecycle_terms();
+  phoenix_plantation_configure_land_displays();
+
+  return 'Estate Lifecycle vocabulary, stages, and Land field were created.';
 }

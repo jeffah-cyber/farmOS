@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - asset.type.land
+    - field.storage.asset.field_estate_lifecycle
+    - taxonomy.vocabulary.estate_lifecycle
+  module:
+    - taxonomy
+  enforced:
+    module:
+      - phoenix_plantation
+id: asset.land.field_estate_lifecycle
+field_name: field_estate_lifecycle
+entity_type: asset
+bundle: land
+label: 'Estate Lifecycle'
+description: 'Select the current lifecycle stage for an Estate land asset.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      estate_lifecycle: estate_lifecycle
+    sort:
+      field: weight
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
