@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - asset.type.land
+    - field.storage.asset.field_phoenix_code
+  enforced:
+    module:
+      - phoenix_plantation
+id: asset.land.field_phoenix_code
+field_name: field_phoenix_code
+entity_type: asset
+bundle: land
+label: 'Phoenix Code'
+description: 'Unique Phoenix OS identification code for an estate, plantation block, or other managed land asset.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

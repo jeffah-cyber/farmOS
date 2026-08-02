@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Installation hooks for the Phoenix Plantation module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function phoenix_plantation_install(): void {
+  $display_repository = \Drupal::service('entity_display.repository');
+
+  $form_display = $display_repository->getFormDisplay('asset', 'land');
+  $form_display->setComponent('field_phoenix_code', [
+    'type' => 'string_textfield',
+    'weight' => 5,
+  ]);
+  $form_display->save();
+
+  $view_display = $display_repository->getViewDisplay('asset', 'land');
+  $view_display->setComponent('field_phoenix_code', [
+    'type' => 'string',
+    'label' => 'above',
+    'weight' => 5,
+  ]);
+  $view_display->save();
+}
