@@ -1,0 +1,5 @@
+services:
+  phoenix_plantation.dashboard:
+    class: Drupal\phoenix_plantation\Service\DashboardService
+    arguments:
+      - '@entity_type.manager'
