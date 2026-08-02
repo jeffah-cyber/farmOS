@@ -1,0 +1,56 @@
+.phoenix-dashboard {
+  max-width: 1200px;
+}
+
+.phoenix-dashboard__header {
+  margin-bottom: 2rem;
+}
+
+.phoenix-dashboard__header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.phoenix-dashboard__summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.phoenix-dashboard__card {
+  padding: 1.5rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.phoenix-dashboard__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.phoenix-dashboard__value {
+  display: block;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.phoenix-dashboard__portfolio {
+  padding: 1.5rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.phoenix-dashboard__portfolio table {
+  width: 100%;
+}
+
+.phoenix-dashboard__portfolio th,
+.phoenix-dashboard__portfolio td {
+  padding: 0.75rem;
+  text-align: left;
+}

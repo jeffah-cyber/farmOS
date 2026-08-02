@@ -40,6 +40,11 @@ final class DashboardController extends ControllerBase {
       '#estate_count' => $data['estate_count'],
       '#block_count' => $data['block_count'],
       '#estate_rows' => $data['estate_rows'],
+      '#attached' => [
+        'library' => [
+          'phoenix_plantation/dashboard',
+        ],
+      ],
       '#cache' => [
         'tags' => ['asset_list'],
         'contexts' => ['user.permissions'],
