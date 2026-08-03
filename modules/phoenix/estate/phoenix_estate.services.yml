@@ -1,0 +1,5 @@
+services:
+  phoenix_estate.workspace:
+    class: Drupal\phoenix_estate\Service\EstateWorkspaceService
+    arguments:
+      - '@entity_type.manager'

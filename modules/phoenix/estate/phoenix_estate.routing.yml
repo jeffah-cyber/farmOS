@@ -1,0 +1,12 @@
+phoenix_estate.workspace:
+  path: '/admin/phoenix/estate/{asset}'
+  defaults:
+    _controller: '\Drupal\phoenix_estate\Controller\EstateWorkspaceController::workspace'
+    _title_callback: '\Drupal\phoenix_estate\Controller\EstateWorkspaceController::title'
+  requirements:
+    _permission: 'access administration pages'
+    asset: '\d+'
+  options:
+    parameters:
+      asset:
+        type: entity:asset
