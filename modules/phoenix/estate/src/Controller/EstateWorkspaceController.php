@@ -49,55 +49,16 @@ final class EstateWorkspaceController extends ControllerBase {
     $data = $this->workspaceService->getWorkspaceData($asset);
 
     return [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['phoenix-estate-workspace'],
-      ],
-
-      'header' => [
-        '#markup' => '<h1>' . $data['estate_name'] . '</h1>',
-      ],
-
-      'details' => [
-        '#theme' => 'item_list',
-        '#title' => $this->t('Estate Information'),
-        '#items' => [
-          $this->t('Phoenix Code: @code', [
-            '@code' => $data['phoenix_code'],
-          ]),
-          $this->t('Lifecycle: @lifecycle', [
-            '@lifecycle' => $data['lifecycle'],
-          ]),
-        ],
-      ],
-
-      'operations' => [
-        '#theme' => 'item_list',
-        '#title' => $this->t('Operations'),
-        '#items' => [
-          $this->t('Plantation Blocks: @count', [
-            '@count' => $data['block_count'],
-          ]),
-          $this->t('Workers: Pending'),
-          $this->t('Machinery: Pending'),
-          $this->t('Tasks Today: Pending'),
-        ],
-      ],
-
-      'activity' => [
-        '#markup' => '<h2>Recent Activity</h2><p>No activity recorded.</p>',
-      ],
-
-      'alerts' => [
-        '#markup' => '<h2>Alerts</h2><p>No active alerts.</p>',
-      ],
-
+      '#theme' => 'phoenix_estate_workspace',
+      '#estate_name' => $data['estate_name'],
+      '#phoenix_code' => $data['phoenix_code'],
+      '#lifecycle' => $data['lifecycle'],
+      '#block_count' => $data['block_count'],
       '#attached' => [
         'library' => [
           'phoenix_core/ui',
         ],
       ],
-
       '#cache' => [
         'tags' => array_merge(
           $asset->getCacheTags(),

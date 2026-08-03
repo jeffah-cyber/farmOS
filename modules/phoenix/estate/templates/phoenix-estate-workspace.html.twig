@@ -1,0 +1,74 @@
+<div class="phoenix-workspace">
+
+  <header class="phoenix-workspace__header">
+  <h1>{{ estate_name }}</h1>
+
+  <div class="phoenix-workspace__meta">
+    <span>{{ phoenix_code }}</span>
+
+    {{ include('@phoenix_core/components/status-badge.html.twig', {
+      status: lifecycle,
+      label: lifecycle
+    }) }}
+  </div>
+</header>
+
+  <section class="phoenix-workspace__kpis">
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Plantation Blocks',
+      value: block_count,
+      subtitle: 'Linked to this estate'
+    }) }}
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Workers',
+      value: '—',
+      subtitle: 'Coming soon'
+    }) }}
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Machinery',
+      value: '—',
+      subtitle: 'Coming soon'
+    }) }}
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Tasks Today',
+      value: '—',
+      subtitle: 'Coming soon'
+    }) }}
+
+  </section>
+
+  <main class="phoenix-workspace__content">
+
+    <section class="phoenix-dashboard__portfolio">
+      <h2>Estate Information</h2>
+
+      <dl>
+        <dt>Phoenix Code</dt>
+        <dd>{{ phoenix_code }}</dd>
+
+        <dt>Lifecycle</dt>
+        <dd>{{ lifecycle }}</dd>
+      </dl>
+    </section>
+
+  </main>
+
+  <aside class="phoenix-workspace__sidebar">
+
+    <section>
+      <h2>Recent Activity</h2>
+      <p>No activity recorded.</p>
+    </section>
+
+    <section>
+      <h2>Alerts</h2>
+      <p>No active alerts.</p>
+    </section>
+
+  </aside>
+
+</div>

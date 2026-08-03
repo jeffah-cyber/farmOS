@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Hooks for the Phoenix Core module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function phoenix_core_theme(): array {
+  return [
+    'phoenix_workspace_shell' => [
+      'variables' => [
+        'title' => '',
+        'subtitle' => '',
+        'kpis' => NULL,
+        'content' => NULL,
+        'sidebar' => NULL,
+      ],
+      'template' => 'layout/workspace-shell',
+    ],
+
+    'phoenix_stat_card' => [
+      'variables' => [
+        'title' => '',
+        'value' => '',
+        'subtitle' => '',
+      ],
+      'template' => 'components/stat-card',
+    ],
+
+    'phoenix_status_badge' => [
+      'variables' => [
+        'status' => '',
+        'label' => '',
+      ],
+      'template' => 'components/status-badge',
+    ],
+  ];
+}

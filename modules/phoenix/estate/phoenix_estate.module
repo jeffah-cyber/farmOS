@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Hooks for the Phoenix Estate module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function phoenix_estate_theme(): array {
+  return [
+    'phoenix_estate_workspace' => [
+      'variables' => [
+        'estate_name' => '',
+        'phoenix_code' => '',
+        'lifecycle' => '',
+        'block_count' => 0,
+      ],
+      'template' => 'phoenix-estate-workspace',
+    ],
+  ];
+}

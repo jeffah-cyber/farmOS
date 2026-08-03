@@ -205,3 +205,63 @@ body {
     margin-bottom: var(--phoenix-space-4);
   }
 }
+
+/* ==========================================
+   Status Badge
+========================================== */
+
+.phoenix-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.phoenix-status--land-acquired {
+  background: #e8f7ec;
+  color: #17693d;
+}
+
+.phoenix-status--under-development {
+  background: #fff5d8;
+  color: #8a6500;
+}
+
+.phoenix-status--operational {
+  background: #e7f1ff;
+  color: #004f9f;
+}
+
+.phoenix-status--expansion {
+  background: #efe7ff;
+  color: #5d2ea8;
+}
+
+.phoenix-status--suspended {
+  background: #fdecec;
+  color: #a12828;
+}
+
+.phoenix-workspace__meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--phoenix-space-3);
+  margin-top: var(--phoenix-space-3);
+}
+
+.phoenix-workspace__meta > span:first-child {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 650;
+}
+
+.phoenix-workspace__header .phoenix-status {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
