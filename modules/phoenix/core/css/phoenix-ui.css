@@ -1,0 +1,154 @@
+/* ==========================================
+   Phoenix OS Design System v1
+========================================== */
+
+:root {
+
+  --phoenix-primary: #0b6e4f;
+  --phoenix-primary-dark: #084c38;
+
+  --phoenix-accent: #d4af37;
+
+  --phoenix-background: #f5f7f8;
+
+  --phoenix-card: #ffffff;
+
+  --phoenix-border: #dde5e7;
+
+  --phoenix-text: #253238;
+
+  --phoenix-radius: 14px;
+
+  --phoenix-shadow:
+      0 3px 10px rgba(0,0,0,.06);
+
+}
+
+body{
+
+    background:var(--phoenix-background);
+
+    color:var(--phoenix-text);
+
+}
+
+/* Dashboard */
+
+.phoenix-dashboard{
+
+    max-width:1400px;
+
+    margin:auto;
+
+}
+
+/* Header */
+
+.phoenix-dashboard__header{
+
+    margin-bottom:32px;
+
+}
+
+.phoenix-dashboard__header h1{
+
+    color:var(--phoenix-primary);
+
+    font-size:2rem;
+
+}
+
+/* KPI Grid */
+
+.phoenix-dashboard__summary{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(250px,1fr));
+
+    gap:20px;
+
+    margin-bottom:30px;
+
+}
+
+/* KPI Card */
+
+.phoenix-dashboard__card{
+
+    background:var(--phoenix-card);
+
+    border:1px solid var(--phoenix-border);
+
+    border-radius:var(--phoenix-radius);
+
+    padding:25px;
+
+    box-shadow:var(--phoenix-shadow);
+
+}
+
+.phoenix-dashboard__label{
+
+    display:block;
+
+    font-size:.95rem;
+
+    color:#666;
+
+    margin-bottom:8px;
+
+}
+
+.phoenix-dashboard__value{
+
+    font-size:2.4rem;
+
+    font-weight:700;
+
+    color:var(--phoenix-primary);
+
+}
+
+/* Portfolio */
+
+.phoenix-dashboard__portfolio{
+
+    background:white;
+
+    border-radius:var(--phoenix-radius);
+
+    border:1px solid var(--phoenix-border);
+
+    padding:25px;
+
+    box-shadow:var(--phoenix-shadow);
+
+}
+
+.phoenix-dashboard table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.phoenix-dashboard th{
+
+    text-align:left;
+
+    padding:14px;
+
+    background:#eef6f3;
+
+}
+
+.phoenix-dashboard td{
+
+    padding:14px;
+
+    border-top:1px solid #eee;
+
+}

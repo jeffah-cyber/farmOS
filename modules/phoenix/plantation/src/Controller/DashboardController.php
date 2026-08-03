@@ -42,7 +42,7 @@ final class DashboardController extends ControllerBase {
       '#estate_rows' => $data['estate_rows'],
       '#attached' => [
         'library' => [
-          'phoenix_plantation/dashboard',
+          'phoenix_core/ui',
         ],
       ],
       '#cache' => [
