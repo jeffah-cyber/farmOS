@@ -1,0 +1,33 @@
+:root {
+
+  /* Brand */
+
+  --phoenix-primary: #0B6B3A;
+  --phoenix-primary-light: #1C8A4A;
+  --phoenix-accent: #D4AF37;
+
+  /* Background */
+
+  --phoenix-background: #F5F7F8;
+  --phoenix-card: #FFFFFF;
+
+  /* Text */
+
+  --phoenix-heading: #1B1F23;
+  --phoenix-body: #4B5563;
+  --phoenix-muted: #6B7280;
+
+  /* Borders */
+
+  --phoenix-border: #E5E7EB;
+
+  /* Radius */
+
+  --phoenix-radius: 12px;
+
+  /* Shadow */
+
+  --phoenix-shadow:
+      0 4px 10px rgba(0,0,0,.05);
+
+}
