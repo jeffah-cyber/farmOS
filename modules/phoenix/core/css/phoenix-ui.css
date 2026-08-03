@@ -1,154 +1,207 @@
-/* ==========================================
-   Phoenix OS Design System v1
-========================================== */
-
-:root {
-
-  --phoenix-primary: #0b6e4f;
-  --phoenix-primary-dark: #084c38;
-
-  --phoenix-accent: #d4af37;
-
-  --phoenix-background: #f5f7f8;
-
-  --phoenix-card: #ffffff;
-
-  --phoenix-border: #dde5e7;
-
-  --phoenix-text: #253238;
-
-  --phoenix-radius: 14px;
-
-  --phoenix-shadow:
-      0 3px 10px rgba(0,0,0,.06);
-
+body {
+  background: var(--phoenix-background);
+  color: var(--phoenix-body);
 }
 
-body{
+/* Workspace */
 
-    background:var(--phoenix-background);
-
-    color:var(--phoenix-text);
-
+.phoenix-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--phoenix-space-6);
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
-/* Dashboard */
-
-.phoenix-dashboard{
-
-    max-width:1400px;
-
-    margin:auto;
-
+.phoenix-workspace__header,
+.phoenix-workspace__kpis {
+  grid-column: 1 / -1;
 }
 
-/* Header */
-
-.phoenix-dashboard__header{
-
-    margin-bottom:32px;
-
+.phoenix-workspace__header {
+  position: relative;
+  overflow: hidden;
+  padding: var(--phoenix-space-8);
+  background:
+    linear-gradient(
+      135deg,
+      var(--phoenix-primary) 0%,
+      var(--phoenix-primary-hover) 100%
+    );
+  border-radius: var(--phoenix-radius-large);
+  box-shadow: var(--phoenix-shadow);
+  color: #ffffff;
 }
 
-.phoenix-dashboard__header h1{
-
-    color:var(--phoenix-primary);
-
-    font-size:2rem;
-
+.phoenix-workspace__header::after {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -40px;
+  width: 190px;
+  height: 190px;
+  border: 32px solid rgba(255, 255, 255, 0.07);
+  border-radius: 50%;
 }
 
-/* KPI Grid */
-
-.phoenix-dashboard__summary{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(auto-fit,minmax(250px,1fr));
-
-    gap:20px;
-
-    margin-bottom:30px;
-
+.phoenix-workspace__header h1 {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 var(--phoenix-space-2);
+  color: #ffffff;
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  line-height: 1.15;
 }
 
-/* KPI Card */
-
-.phoenix-dashboard__card{
-
-    background:var(--phoenix-card);
-
-    border:1px solid var(--phoenix-border);
-
-    border-radius:var(--phoenix-radius);
-
-    padding:25px;
-
-    box-shadow:var(--phoenix-shadow);
-
+.phoenix-workspace__header p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
 }
 
-.phoenix-dashboard__label{
-
-    display:block;
-
-    font-size:.95rem;
-
-    color:#666;
-
-    margin-bottom:8px;
-
+.phoenix-workspace__kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--phoenix-space-5);
 }
 
-.phoenix-dashboard__value{
-
-    font-size:2.4rem;
-
-    font-weight:700;
-
-    color:var(--phoenix-primary);
-
+.phoenix-workspace__content,
+.phoenix-workspace__sidebar {
+  min-width: 0;
 }
 
-/* Portfolio */
-
-.phoenix-dashboard__portfolio{
-
-    background:white;
-
-    border-radius:var(--phoenix-radius);
-
-    border:1px solid var(--phoenix-border);
-
-    padding:25px;
-
-    box-shadow:var(--phoenix-shadow);
-
+.phoenix-workspace__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--phoenix-space-5);
 }
 
-.phoenix-dashboard table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
+.phoenix-workspace__sidebar section {
+  padding: var(--phoenix-space-6);
+  background: var(--phoenix-card);
+  border: 1px solid var(--phoenix-border);
+  border-radius: var(--phoenix-radius);
+  box-shadow: var(--phoenix-shadow-small);
 }
 
-.phoenix-dashboard th{
-
-    text-align:left;
-
-    padding:14px;
-
-    background:#eef6f3;
-
+.phoenix-workspace__sidebar h2 {
+  margin: 0 0 var(--phoenix-space-3);
+  color: var(--phoenix-heading);
+  font-size: 1.15rem;
 }
 
-.phoenix-dashboard td{
+/* Stat cards */
 
-    padding:14px;
+.phoenix-stat-card {
+  min-height: 150px;
+  padding: var(--phoenix-space-6);
+  background: var(--phoenix-card);
+  border: 1px solid var(--phoenix-border);
+  border-radius: var(--phoenix-radius);
+  box-shadow: var(--phoenix-shadow-small);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
 
-    border-top:1px solid #eee;
+.phoenix-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #cddbd3;
+  box-shadow: var(--phoenix-shadow);
+}
 
+.phoenix-stat-card__title {
+  margin-bottom: var(--phoenix-space-4);
+  color: var(--phoenix-muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.phoenix-stat-card__value {
+  color: var(--phoenix-primary);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 750;
+  line-height: 1;
+}
+
+.phoenix-stat-card__subtitle {
+  margin-top: var(--phoenix-space-4);
+  color: var(--phoenix-muted);
+  font-size: 0.86rem;
+}
+
+/* Panels */
+
+.phoenix-dashboard__portfolio {
+  padding: var(--phoenix-space-6);
+  background: var(--phoenix-card);
+  border: 1px solid var(--phoenix-border);
+  border-radius: var(--phoenix-radius);
+  box-shadow: var(--phoenix-shadow-small);
+}
+
+.phoenix-dashboard__portfolio h2 {
+  margin: 0 0 var(--phoenix-space-5);
+  color: var(--phoenix-heading);
+}
+
+.phoenix-dashboard__portfolio dl {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) 1fr;
+  gap: var(--phoenix-space-3) var(--phoenix-space-6);
+  margin: 0;
+}
+
+.phoenix-dashboard__portfolio dt {
+  color: var(--phoenix-muted);
+  font-weight: 650;
+}
+
+.phoenix-dashboard__portfolio dd {
+  margin: 0;
+  color: var(--phoenix-heading);
+  font-weight: 600;
+}
+
+/* Responsive layout */
+
+@media (max-width: 1100px) {
+  .phoenix-workspace__kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .phoenix-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .phoenix-workspace__sidebar {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .phoenix-workspace__header {
+    padding: var(--phoenix-space-6);
+  }
+
+  .phoenix-workspace__kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .phoenix-dashboard__portfolio dl {
+    grid-template-columns: 1fr;
+    gap: var(--phoenix-space-1);
+  }
+
+  .phoenix-dashboard__portfolio dd {
+    margin-bottom: var(--phoenix-space-4);
+  }
 }

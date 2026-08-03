@@ -1,33 +1,42 @@
 :root {
-
   /* Brand */
+  --phoenix-primary: #0b6b3a;
+  --phoenix-primary-hover: #08582f;
+  --phoenix-primary-soft: #eaf5ef;
+  --phoenix-accent: #d4af37;
 
-  --phoenix-primary: #0B6B3A;
-  --phoenix-primary-light: #1C8A4A;
-  --phoenix-accent: #D4AF37;
-
-  /* Background */
-
-  --phoenix-background: #F5F7F8;
-  --phoenix-card: #FFFFFF;
+  /* Surfaces */
+  --phoenix-background: #f5f7f8;
+  --phoenix-card: #ffffff;
+  --phoenix-card-muted: #fafbfb;
 
   /* Text */
+  --phoenix-heading: #1b1f23;
+  --phoenix-body: #4b5563;
+  --phoenix-muted: #6b7280;
 
-  --phoenix-heading: #1B1F23;
-  --phoenix-body: #4B5563;
-  --phoenix-muted: #6B7280;
+  /* Status */
+  --phoenix-success: #16834a;
+  --phoenix-warning: #a66a00;
+  --phoenix-danger: #b42318;
 
-  /* Borders */
-
-  --phoenix-border: #E5E7EB;
-
-  /* Radius */
-
-  --phoenix-radius: 12px;
+  /* Structure */
+  --phoenix-border: #e2e8ea;
+  --phoenix-radius-small: 8px;
+  --phoenix-radius: 14px;
+  --phoenix-radius-large: 20px;
 
   /* Shadow */
+  --phoenix-shadow-small: 0 2px 8px rgba(20, 35, 30, 0.05);
+  --phoenix-shadow: 0 8px 24px rgba(20, 35, 30, 0.08);
 
-  --phoenix-shadow:
-      0 4px 10px rgba(0,0,0,.05);
-
+  /* Spacing */
+  --phoenix-space-1: 4px;
+  --phoenix-space-2: 8px;
+  --phoenix-space-3: 12px;
+  --phoenix-space-4: 16px;
+  --phoenix-space-5: 20px;
+  --phoenix-space-6: 24px;
+  --phoenix-space-8: 32px;
+  --phoenix-space-10: 40px;
 }
