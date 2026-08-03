@@ -1,0 +1,7 @@
+name: Phoenix Core
+type: module
+description: Provides shared services, configuration, and user interface foundations for Phoenix OS.
+package: Phoenix OS
+core_version_requirement: ^11
+dependencies:
+  - farm:farm_entity
