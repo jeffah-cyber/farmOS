@@ -155,3 +155,58 @@ function phoenix_plantation_update_10001(): string {
 
   return 'Estate Lifecycle vocabulary, stages, and Land field were created.';
 }
+
+/**
+ * Adds the Tree Count field to Plantation Blocks.
+ */
+function phoenix_plantation_update_10002(): string {
+  if (!FieldStorageConfig::loadByName('asset', 'field_tree_count')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_tree_count',
+      'entity_type' => 'asset',
+      'type' => 'integer',
+      'cardinality' => 1,
+      'translatable' => false,
+      'settings' => [
+        'unsigned' => true,
+        'size' => 'normal',
+      ],
+    ])->save();
+  }
+
+  if (!FieldConfig::loadByName('asset', 'land', 'field_tree_count')) {
+    FieldConfig::create([
+      'field_name' => 'field_tree_count',
+      'entity_type' => 'asset',
+      'bundle' => 'land',
+      'label' => 'Tree Count',
+      'description' => 'Total number of trees recorded in this plantation block.',
+      'required' => false,
+      'settings' => [
+        'min' => 0,
+        'max' => NULL,
+        'prefix' => '',
+        'suffix' => '',
+      ],
+    ])->save();
+  }
+
+  $repository = \Drupal::service('entity_display.repository');
+
+  $formDisplay = $repository->getFormDisplay('asset', 'land');
+  $formDisplay->setComponent('field_tree_count', [
+    'type' => 'number',
+    'weight' => 7,
+  ]);
+  $formDisplay->save();
+
+  $viewDisplay = $repository->getViewDisplay('asset', 'land');
+  $viewDisplay->setComponent('field_tree_count', [
+    'type' => 'number_integer',
+    'label' => 'above',
+    'weight' => 7,
+  ]);
+  $viewDisplay->save();
+
+  return 'Tree Count field was added to Land assets.';
+}

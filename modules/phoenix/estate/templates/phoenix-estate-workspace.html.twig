@@ -1,17 +1,17 @@
 <div class="phoenix-workspace">
 
   <header class="phoenix-workspace__header">
-  <h1>{{ estate_name }}</h1>
+    <h1>{{ estate_name }}</h1>
 
-  <div class="phoenix-workspace__meta">
-    <span>{{ phoenix_code }}</span>
+    <div class="phoenix-workspace__meta">
+      <span>{{ phoenix_code }}</span>
 
-    {{ include('@phoenix_core/components/status-badge.html.twig', {
-      status: lifecycle,
-      label: lifecycle
-    }) }}
-  </div>
-</header>
+      {{ include('@phoenix_core/components/status-badge.html.twig', {
+        status: lifecycle,
+        label: lifecycle
+      }) }}
+    </div>
+  </header>
 
   <section class="phoenix-workspace__kpis">
 
@@ -44,6 +44,7 @@
   <main class="phoenix-workspace__content">
 
     <section class="phoenix-dashboard__portfolio">
+
       <h2>Estate Information</h2>
 
       <dl>
@@ -53,6 +54,55 @@
         <dt>Lifecycle</dt>
         <dd>{{ lifecycle }}</dd>
       </dl>
+
+    </section>
+
+    <section class="phoenix-dashboard__portfolio">
+
+      <h2>Plantation Blocks</h2>
+
+      {% if block_rows %}
+
+        <table class="phoenix-table">
+
+          <thead>
+            <tr>
+              <th>Block</th>
+              <th>Code</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+          {% for block in block_rows %}
+
+            <tr>
+
+              <td>{{ block.name }}</td>
+
+              <td>{{ block.code }}</td>
+
+              <td>
+                <a href="/admin/phoenix/plantation/{{ block.id }}">
+                  Open Workspace →
+                </a>
+              </td>
+
+            </tr>
+
+          {% endfor %}
+
+          </tbody>
+
+        </table>
+
+      {% else %}
+
+        <p>No plantation blocks have been created.</p>
+
+      {% endif %}
+
     </section>
 
   </main>
@@ -60,13 +110,19 @@
   <aside class="phoenix-workspace__sidebar">
 
     <section>
+
       <h2>Recent Activity</h2>
+
       <p>No activity recorded.</p>
+
     </section>
 
     <section>
+
       <h2>Alerts</h2>
+
       <p>No active alerts.</p>
+
     </section>
 
   </aside>

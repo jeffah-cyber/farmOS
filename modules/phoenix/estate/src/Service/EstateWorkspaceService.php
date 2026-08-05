@@ -29,8 +29,30 @@ final class EstateWorkspaceService {
       ->condition('type', 'land')
       ->condition('land_type', 'plantation_block')
       ->condition('parent.target_id', $estate->id())
+      ->sort('name', 'ASC')
       ->accessCheck(TRUE)
       ->execute();
+
+    $blocks = $assetStorage->loadMultiple($blockIds);
+
+    $blockRows = [];
+
+    foreach ($blocks as $block) {
+      $blockCode = 'Not assigned';
+
+      if (
+        $block->hasField('field_phoenix_code') &&
+        !$block->get('field_phoenix_code')->isEmpty()
+      ) {
+        $blockCode = $block->get('field_phoenix_code')->value;
+      }
+
+      $blockRows[] = [
+        'id' => $block->id(),
+        'name' => $block->label(),
+        'code' => $blockCode,
+      ];
+    }
 
     $phoenixCode = 'Not assigned';
 
@@ -58,7 +80,8 @@ final class EstateWorkspaceService {
       'estate_name' => $estate->label(),
       'phoenix_code' => $phoenixCode,
       'lifecycle' => $lifecycle,
-      'block_count' => count($blockIds),
+      'block_count' => count($blockRows),
+      'block_rows' => $blockRows,
     ];
   }
 

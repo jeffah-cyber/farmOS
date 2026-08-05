@@ -1,0 +1,79 @@
+<div class="phoenix-workspace">
+
+  <header class="phoenix-workspace__header">
+    <h1>{{ block_name }}</h1>
+
+    <div class="phoenix-workspace__meta">
+      <span>{{ phoenix_code }}</span>
+
+      {{ include('@phoenix_core/components/status-badge.html.twig', {
+        status: health,
+        label: health
+      }) }}
+    </div>
+
+    <p>Estate: {{ estate_name }}</p>
+  </header>
+
+  <section class="phoenix-workspace__kpis">
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Trees',
+      value: tree_count,
+      subtitle: 'Recorded palms'
+    }) }}
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Area',
+      value: area,
+      subtitle: 'Plantation block area'
+    }) }}
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Age',
+      value: age,
+      subtitle: 'Since planting'
+    }) }}
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Health',
+      value: health,
+      subtitle: 'Current assessment'
+    }) }}
+
+  </section>
+
+  <main class="phoenix-workspace__content">
+
+    <section class="phoenix-dashboard__portfolio">
+      <h2>Block Information</h2>
+
+      <dl>
+        <dt>Block Code</dt>
+        <dd>{{ phoenix_code }}</dd>
+
+        <dt>Estate</dt>
+        <dd>{{ estate_name }}</dd>
+
+        <dt>Health</dt>
+        <dd>{{ health }}</dd>
+      </dl>
+    </section>
+
+  </main>
+
+  <aside class="phoenix-workspace__sidebar">
+
+    <section>
+      <h2>Recent Activities</h2>
+      <p>No activities recorded.</p>
+    </section>
+
+    <section>
+      <h2>Upcoming Tasks</h2>
+      <p>No scheduled tasks.</p>
+    </section>
+
+  </aside>
+
+</div>

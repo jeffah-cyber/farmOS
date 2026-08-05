@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - asset.type.land
+    - field.storage.asset.field_tree_count
+  enforced:
+    module:
+      - phoenix_plantation
+id: asset.land.field_tree_count
+field_name: field_tree_count
+entity_type: asset
+bundle: land
+label: 'Tree Count'
+description: 'Total number of trees recorded in this plantation block.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

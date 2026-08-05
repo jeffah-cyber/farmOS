@@ -3,3 +3,6 @@ services:
     class: Drupal\phoenix_plantation\Service\DashboardService
     arguments:
       - '@entity_type.manager'
+
+  phoenix_plantation.workspace:
+    class: Drupal\phoenix_plantation\Service\PlantationWorkspaceService

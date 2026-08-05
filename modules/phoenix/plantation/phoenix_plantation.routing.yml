@@ -1,7 +1,12 @@
-phoenix_plantation.dashboard:
-  path: '/admin/phoenix/dashboard'
+phoenix_plantation.workspace:
+  path: '/admin/phoenix/plantation/{asset}'
   defaults:
-    _controller: '\Drupal\phoenix_plantation\Controller\DashboardController::dashboard'
-    _title: 'Phoenix Dashboard'
+    _controller: '\Drupal\phoenix_plantation\Controller\PlantationWorkspaceController::workspace'
+    _title_callback: '\Drupal\phoenix_plantation\Controller\PlantationWorkspaceController::title'
   requirements:
     _permission: 'access administration pages'
+    asset: '\d+'
+  options:
+    parameters:
+      asset:
+        type: entity:asset

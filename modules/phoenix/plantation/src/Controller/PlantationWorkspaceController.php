@@ -2,59 +2,61 @@
 
 declare(strict_types=1);
 
-namespace Drupal\phoenix_estate\Controller;
+namespace Drupal\phoenix_plantation\Controller;
 
 use Drupal\asset\Entity\AssetInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\phoenix_estate\Service\EstateWorkspaceService;
+use Drupal\phoenix_plantation\Service\PlantationWorkspaceService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Builds the Phoenix Estate Workspace.
+ * Builds the Plantation Block Workspace.
  */
-final class EstateWorkspaceController extends ControllerBase {
+final class PlantationWorkspaceController extends ControllerBase {
 
   /**
-   * Constructs the Estate Workspace controller.
+   * Constructs the controller.
    */
   public function __construct(
-    private readonly EstateWorkspaceService $workspaceService,
+    private readonly PlantationWorkspaceService $workspaceService,
   ) {}
 
   /**
-   * Creates the controller from Drupal's service container.
+   * Creates the controller from the service container.
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('phoenix_estate.workspace'),
+      $container->get('phoenix_plantation.workspace'),
     );
   }
 
   /**
-   * Returns the Estate Workspace page title.
+   * Returns the page title.
    */
   public function title(AssetInterface $asset): string {
-    $this->validateEstate($asset);
+    $this->validateBlock($asset);
 
     return $asset->label();
   }
 
   /**
-   * Displays the Estate Workspace.
+   * Displays the Plantation Block Workspace.
    */
   public function workspace(AssetInterface $asset): array {
-    $this->validateEstate($asset);
+    $this->validateBlock($asset);
 
     $data = $this->workspaceService->getWorkspaceData($asset);
 
     return [
-      '#theme' => 'phoenix_estate_workspace',
-      '#estate_name' => $data['estate_name'],
+      '#theme' => 'phoenix_plantation_workspace',
+      '#block_name' => $data['block_name'],
       '#phoenix_code' => $data['phoenix_code'],
-      '#lifecycle' => $data['lifecycle'],
-      '#block_count' => $data['block_count'],
-      '#block_rows' => $data['block_rows'],
+      '#estate_name' => $data['estate_name'],
+      '#tree_count' => $data['tree_count'],
+      '#area' => $data['area'],
+      '#age' => $data['age'],
+      '#health' => $data['health'],
       '#attached' => [
         'library' => [
           'phoenix_core/ui',
@@ -73,14 +75,14 @@ final class EstateWorkspaceController extends ControllerBase {
   }
 
   /**
-   * Ensures the supplied asset is an Estate.
+   * Ensures the supplied asset is a Plantation Block.
    */
-  private function validateEstate(AssetInterface $asset): void {
+  private function validateBlock(AssetInterface $asset): void {
     if (
       $asset->bundle() !== 'land' ||
       !$asset->hasField('land_type') ||
       $asset->get('land_type')->isEmpty() ||
-      $asset->get('land_type')->value !== 'estate'
+      $asset->get('land_type')->value !== 'plantation_block'
     ) {
       throw new NotFoundHttpException();
     }

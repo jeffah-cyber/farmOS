@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - asset
+  enforced:
+    module:
+      - phoenix_plantation
+id: asset.field_tree_count
+field_name: field_tree_count
+entity_type: asset
+type: integer
+settings:
+  unsigned: true
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
