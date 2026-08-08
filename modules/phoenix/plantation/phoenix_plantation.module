@@ -31,6 +31,7 @@ function phoenix_plantation_theme(): array {
         'age' => '—',
         'health' => '',
         'recent_activities' => [],
+        'record_operation_url' => '',
       ],
       'template' => 'phoenix-plantation-workspace',
     ],

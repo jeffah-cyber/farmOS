@@ -63,6 +63,17 @@
     <section class="phoenix-dashboard__portfolio">
       <h2>Recent Operations</h2>
 
+      {% if record_operation_url %}
+  <p>
+    <a
+      href="{{ record_operation_url }}"
+      class="phoenix-action-button"
+    >
+      + Record Operation
+    </a>
+  </p>
+{% endif %}
+
       {% if recent_activities %}
 
         <div class="phoenix-timeline">

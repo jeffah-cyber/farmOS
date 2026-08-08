@@ -6,6 +6,7 @@ namespace Drupal\phoenix_plantation\Controller;
 
 use Drupal\asset\Entity\AssetInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 use Drupal\phoenix_plantation\Service\PlantationWorkspaceService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -48,6 +49,29 @@ final class PlantationWorkspaceController extends ControllerBase {
 
     $data = $this->workspaceService->getWorkspaceData($asset);
 
+    $workspaceUrl = Url::fromRoute(
+      'phoenix_plantation.workspace',
+      [
+        'asset' => $asset->id(),
+      ],
+      [
+        'absolute' => TRUE,
+      ],
+    )->toString();
+
+    $recordOperationUrl = Url::fromRoute(
+      'entity.log.add_form',
+      [
+        'log_type' => 'activity',
+      ],
+      [
+        'query' => [
+          'asset' => [$asset->id()],
+          'destination' => $workspaceUrl,
+        ],
+      ],
+    )->toString();
+
     return [
       '#theme' => 'phoenix_plantation_workspace',
       '#block_name' => $data['block_name'],
@@ -58,6 +82,7 @@ final class PlantationWorkspaceController extends ControllerBase {
       '#age' => $data['age'],
       '#health' => $data['health'],
       '#recent_activities' => $data['recent_activities'],
+      '#record_operation_url' => $recordOperationUrl,
       '#attached' => [
         'library' => [
           'phoenix_core/ui',

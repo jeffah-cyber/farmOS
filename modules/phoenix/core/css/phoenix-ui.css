@@ -361,3 +361,25 @@ body {
 .phoenix-timeline__link:hover {
   text-decoration: underline;
 }
+
+/* ==========================================
+   Action Button
+========================================== */
+
+.phoenix-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: var(--phoenix-radius-small);
+  background: var(--phoenix-primary);
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.phoenix-action-button:hover {
+  background: var(--phoenix-primary-hover);
+  color: #ffffff;
+  text-decoration: none;
+}
