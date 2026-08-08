@@ -1,0 +1,27 @@
+phoenix_core.command_centre:
+  title: 'Command Centre'
+  description: 'Phoenix OS operational overview.'
+  route_name: phoenix_plantation.dashboard
+  parent: farm.base
+  weight: -100
+
+phoenix_core.estates:
+  title: 'Estates'
+  description: 'Manage Phoenix estates.'
+  route_name: phoenix_estate.collection
+  parent: farm.base
+  weight: -90
+
+phoenix_core.plantations:
+  title: 'Plantations'
+  description: 'Manage Phoenix plantation blocks.'
+  route_name: phoenix_plantation.collection
+  parent: farm.base
+  weight: -80
+
+phoenix_core.operations:
+  title: 'Operations'
+  description: 'Manage plantation operations.'
+  route_name: phoenix_plantation.dashboard
+  parent: farm.base
+  weight: -70

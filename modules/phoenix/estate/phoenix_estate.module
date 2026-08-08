@@ -12,6 +12,14 @@ declare(strict_types=1);
  */
 function phoenix_estate_theme(): array {
   return [
+
+    'phoenix_estate_collection' => [
+  'variables' => [
+    'estates' => [],
+  ],
+  'template' => 'phoenix-estate-collection',
+],    
+
     'phoenix_estate_workspace' => [
       'variables' => [
         'estate_name' => '',

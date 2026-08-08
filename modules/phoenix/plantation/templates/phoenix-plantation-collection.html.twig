@@ -1,0 +1,54 @@
+<div class="phoenix-workspace">
+
+  <header class="phoenix-workspace__header">
+    <h1>Plantations</h1>
+    <p>Manage plantation blocks across Phoenix estates.</p>
+  </header>
+
+  <main class="phoenix-workspace__content">
+
+    <section class="phoenix-dashboard__portfolio">
+
+      {% if blocks %}
+
+        <table class="phoenix-table">
+          <thead>
+            <tr>
+              <th>Plantation Block</th>
+              <th>Estate</th>
+              <th>Phoenix Code</th>
+              <th>Trees</th>
+              <th>Health</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for block in blocks %}
+              <tr>
+                <td>{{ block.name }}</td>
+                <td>{{ block.estate }}</td>
+                <td>{{ block.code }}</td>
+                <td>{{ block.tree_count }}</td>
+                <td>{{ block.health }}</td>
+                <td>
+                  <a href="{{ block.url }}">
+                    Open Workspace →
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      {% else %}
+
+        <p>No plantation blocks have been created yet.</p>
+
+      {% endif %}
+
+    </section>
+
+  </main>
+
+</div>

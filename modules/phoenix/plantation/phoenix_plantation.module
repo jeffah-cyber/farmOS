@@ -21,6 +21,13 @@ function phoenix_plantation_theme(): array {
       'template' => 'phoenix-dashboard',
     ],
 
+    'phoenix_plantation_collection' => [
+      'variables' => [
+        'blocks' => [],
+      ],
+      'template' => 'phoenix-plantation-collection',
+    ],
+
     'phoenix_plantation_workspace' => [
       'variables' => [
         'block_name' => '',

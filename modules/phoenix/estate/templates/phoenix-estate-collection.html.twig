@@ -1,0 +1,50 @@
+<div class="phoenix-workspace">
+
+  <header class="phoenix-workspace__header">
+    <h1>Estates</h1>
+    <p>Manage the Phoenix estate portfolio.</p>
+  </header>
+
+  <main class="phoenix-workspace__content">
+
+    <section class="phoenix-dashboard__portfolio">
+
+      {% if estates %}
+
+        <table class="phoenix-table">
+          <thead>
+            <tr>
+              <th>Estate</th>
+              <th>Phoenix Code</th>
+              <th>Lifecycle</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for estate in estates %}
+              <tr>
+                <td>{{ estate.name }}</td>
+                <td>{{ estate.code }}</td>
+                <td>{{ estate.lifecycle }}</td>
+                <td>
+                  <a href="{{ estate.url }}">
+                    Open Workspace →
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      {% else %}
+
+        <p>No estates have been created yet.</p>
+
+      {% endif %}
+
+    </section>
+
+  </main>
+
+</div>
