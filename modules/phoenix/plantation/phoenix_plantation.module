@@ -30,6 +30,7 @@ function phoenix_plantation_theme(): array {
         'area' => '—',
         'age' => '—',
         'health' => '',
+        'recent_activities' => [],
       ],
       'template' => 'phoenix-plantation-workspace',
     ],

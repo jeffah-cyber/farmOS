@@ -60,18 +60,66 @@
       </dl>
     </section>
 
+    <section class="phoenix-dashboard__portfolio">
+      <h2>Recent Operations</h2>
+
+      {% if recent_activities %}
+
+        <div class="phoenix-timeline">
+
+          {% for activity in recent_activities %}
+
+            <article class="phoenix-timeline__item">
+
+              <div class="phoenix-timeline__marker"></div>
+
+              <div class="phoenix-timeline__content">
+
+                <h3>{{ activity.name }}</h3>
+
+                <div class="phoenix-timeline__meta">
+                  {{ activity.timestamp|date('d M Y, H:i') }}
+
+                  {% if activity.status %}
+                    · {{ activity.status|capitalize }}
+                  {% endif %}
+                </div>
+
+                <a
+                  href="/log/{{ activity.id }}"
+                  class="phoenix-timeline__link"
+                >
+                  View operation →
+                </a>
+
+              </div>
+
+            </article>
+
+          {% endfor %}
+
+        </div>
+
+      {% else %}
+
+        <p>No operations have been recorded for this block yet.</p>
+
+      {% endif %}
+
+    </section>
+
   </main>
 
   <aside class="phoenix-workspace__sidebar">
 
     <section>
-      <h2>Recent Activities</h2>
-      <p>No activities recorded.</p>
+      <h2>Upcoming Tasks</h2>
+      <p>No scheduled tasks.</p>
     </section>
 
     <section>
-      <h2>Upcoming Tasks</h2>
-      <p>No scheduled tasks.</p>
+      <h2>Alerts</h2>
+      <p>No active alerts.</p>
     </section>
 
   </aside>

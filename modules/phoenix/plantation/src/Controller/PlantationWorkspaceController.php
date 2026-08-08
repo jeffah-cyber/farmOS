@@ -57,6 +57,7 @@ final class PlantationWorkspaceController extends ControllerBase {
       '#area' => $data['area'],
       '#age' => $data['age'],
       '#health' => $data['health'],
+      '#recent_activities' => $data['recent_activities'],
       '#attached' => [
         'library' => [
           'phoenix_core/ui',
@@ -65,7 +66,7 @@ final class PlantationWorkspaceController extends ControllerBase {
       '#cache' => [
         'tags' => array_merge(
           $asset->getCacheTags(),
-          ['asset_list'],
+          ['asset_list', 'log_list'],
         ),
         'contexts' => [
           'user.permissions',

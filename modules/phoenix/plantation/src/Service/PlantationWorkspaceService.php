@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace Drupal\phoenix_plantation\Service;
 
 use Drupal\asset\Entity\AssetInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides data for an individual Plantation Block Workspace.
  */
 final class PlantationWorkspaceService {
+
+  /**
+   * Constructs the Plantation Workspace service.
+   */
+  public function __construct(
+    private readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * Builds workspace data for a Plantation Block.
@@ -48,6 +56,29 @@ final class PlantationWorkspaceService {
       );
     }
 
+    $recentActivities = [];
+
+    $logStorage = $this->entityTypeManager->getStorage('log');
+
+    $logIds = $logStorage->getQuery()
+      ->condition('type', 'activity')
+      ->condition('asset.target_id', $block->id())
+      ->sort('timestamp', 'DESC')
+      ->range(0, 5)
+      ->accessCheck(TRUE)
+      ->execute();
+
+    $logs = $logStorage->loadMultiple($logIds);
+
+    foreach ($logs as $log) {
+      $recentActivities[] = [
+        'id' => $log->id(),
+        'name' => $log->label(),
+        'timestamp' => (int) $log->get('timestamp')->value,
+        'status' => $log->get('status')->value ?? '',
+      ];
+    }
+
     return [
       'block_name' => $block->label(),
       'phoenix_code' => $phoenixCode,
@@ -56,6 +87,7 @@ final class PlantationWorkspaceService {
       'area' => '—',
       'age' => '—',
       'health' => 'Not assessed',
+      'recent_activities' => $recentActivities,
     ];
   }
 

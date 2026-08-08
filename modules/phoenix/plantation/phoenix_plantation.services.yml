@@ -6,3 +6,5 @@ services:
 
   phoenix_plantation.workspace:
     class: Drupal\phoenix_plantation\Service\PlantationWorkspaceService
+    arguments:
+      - '@entity_type.manager'
