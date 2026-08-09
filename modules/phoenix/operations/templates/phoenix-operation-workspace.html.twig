@@ -1,0 +1,85 @@
+<div class="phoenix-workspace">
+
+  <header class="phoenix-workspace__header">
+    <h1>{{ operation.name }}</h1>
+
+    <div class="phoenix-workspace__meta">
+      {{ include('@phoenix_core/components/status-badge.html.twig', {
+        status: operation.status,
+        label: operation.status|capitalize
+      }) }}
+    </div>
+
+    <p>{{ operation.timestamp|date('d M Y, H:i') }}</p>
+  </header>
+
+  <main class="phoenix-workspace__content">
+
+    <section class="phoenix-dashboard__portfolio">
+      <h2>Operation Details</h2>
+
+      <dl>
+        <dt>Status</dt>
+        <dt>Category</dt>
+<dd>
+  {% if operation.categories %}
+    {{ operation.categories|join(', ') }}
+  {% else %}
+    —
+  {% endif %}
+</dd>
+        <dd>{{ operation.status|capitalize }}</dd>
+
+        <dt>Date</dt>
+        <dd>{{ operation.timestamp|date('d M Y, H:i') }}</dd>
+
+        <dt>Assets</dt>
+        <dd>
+          {% if operation.assets %}
+            {% for asset in operation.assets %}
+              {{ asset.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            —
+          {% endif %}
+        </dd>
+
+        <dt>Owner</dt>
+        <dd>
+          {% if operation.owners %}
+            {{ operation.owners|join(', ') }}
+          {% else %}
+            —
+          {% endif %}
+        </dd>
+
+        <dt>Movement</dt>
+        <dd>{{ operation.is_movement ? 'Yes' : 'No' }}</dd>
+      </dl>
+    </section>
+
+    <section class="phoenix-dashboard__portfolio">
+      <h2>Notes</h2>
+
+      {% if operation.notes %}
+        <p>{{ operation.notes }}</p>
+      {% else %}
+        <p>No notes recorded.</p>
+      {% endif %}
+    </section>
+
+  </main>
+
+  <aside class="phoenix-workspace__sidebar">
+
+    <section>
+      <h2>Actions</h2>
+
+      <a href="{{ edit_url }}" class="phoenix-action-button">
+        Edit Operation
+      </a>
+    </section>
+
+  </aside>
+
+</div>

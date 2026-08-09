@@ -383,3 +383,26 @@ body {
   color: #ffffff;
   text-decoration: none;
 }
+
+/* ==========================================
+   Workspace Actions
+========================================== */
+
+.phoenix-workspace__actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--phoenix-space-3);
+  margin-top: var(--phoenix-space-5);
+}
+
+.phoenix-workspace__header .phoenix-action-button {
+  background: #ffffff;
+  color: var(--phoenix-primary);
+}
+
+.phoenix-workspace__header .phoenix-action-button:hover {
+  background: var(--phoenix-primary-soft);
+  color: var(--phoenix-primary-hover);
+}

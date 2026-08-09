@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * @file
+ * Install and update hooks for Phoenix Operations.
+ */
+
+/**
+ * Seeds the standard Phoenix operation categories.
+ */
+function _phoenix_operations_seed_categories(): void {
+  $categories = [
+    'Fertilizer Application',
+    'Weeding',
+    'Pruning',
+    'Spraying',
+    'Irrigation',
+    'Inspection',
+    'Land Preparation',
+    'Harvest Preparation',
+    'Maintenance',
+  ];
+
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+  foreach ($categories as $category) {
+    $existing = $storage->loadByProperties([
+      'vid' => 'log_category',
+      'name' => $category,
+    ]);
+
+    if (!empty($existing)) {
+      continue;
+    }
+
+    Term::create([
+      'vid' => 'log_category',
+      'name' => $category,
+    ])->save();
+  }
+}
+
+/**
+ * Implements hook_install().
+ */
+function phoenix_operations_install(): void {
+  _phoenix_operations_seed_categories();
+}
+
+/**
+ * Adds the initial Phoenix operation categories to existing installations.
+ */
+function phoenix_operations_update_10001(): string {
+  _phoenix_operations_seed_categories();
+
+  return 'Phoenix operation categories were created.';
+}

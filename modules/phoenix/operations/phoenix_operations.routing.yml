@@ -1,0 +1,20 @@
+phoenix_operations.collection:
+  path: '/admin/phoenix/operations'
+  defaults:
+    _controller: '\Drupal\phoenix_operations\Controller\OperationsController::collection'
+    _title: 'Operations'
+  requirements:
+    _permission: 'access administration pages'
+
+phoenix_operations.workspace:
+  path: '/admin/phoenix/operation/{log}'
+  defaults:
+    _controller: '\Drupal\phoenix_operations\Controller\OperationWorkspaceController::workspace'
+    _title_callback: '\Drupal\phoenix_operations\Controller\OperationWorkspaceController::title'
+  requirements:
+    _permission: 'access administration pages'
+    log: '\d+'
+  options:
+    parameters:
+      log:
+        type: entity:log

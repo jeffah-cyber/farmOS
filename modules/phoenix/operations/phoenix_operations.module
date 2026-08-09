@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Hooks for the Phoenix Operations module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function phoenix_operations_theme(): array {
+  return [
+    'phoenix_operations_collection' => [
+      'variables' => [
+        'operations' => [],
+        'record_operation_url' => '',
+      ],
+      'template' => 'phoenix-operations-collection',
+    ],
+
+    'phoenix_operation_workspace' => [
+      'variables' => [
+        'operation' => [],
+        'edit_url' => '',
+      ],
+      'template' => 'phoenix-operation-workspace',
+    ],
+  ];
+}

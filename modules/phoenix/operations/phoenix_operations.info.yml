@@ -1,0 +1,10 @@
+name: Phoenix Operations
+type: module
+description: Provides operational activity management and workspaces for Phoenix OS.
+package: Phoenix OS
+core_version_requirement: ^11
+dependencies:
+  - phoenix_core:phoenix_core
+  - phoenix_estate:phoenix_estate
+  - phoenix_plantation:phoenix_plantation
+  - farm:farm_activity

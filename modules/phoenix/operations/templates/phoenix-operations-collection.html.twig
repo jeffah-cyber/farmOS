@@ -1,0 +1,105 @@
+<div class="phoenix-workspace">
+
+  <header class="phoenix-workspace__header">
+    <h1>Operations</h1>
+
+    <p>
+      View and manage field operations across Phoenix plantations.
+    </p>
+
+    {% if record_operation_url %}
+      <div class="phoenix-workspace__actions">
+        <a
+          href="{{ record_operation_url }}"
+          class="phoenix-action-button"
+        >
+          + Record Operation
+        </a>
+      </div>
+    {% endif %}
+  </header>
+
+  <main class="phoenix-workspace__content">
+
+    <section class="phoenix-dashboard__portfolio">
+
+      <h2>Recent Operations</h2>
+
+      {% if operations %}
+
+        <table class="phoenix-table">
+
+          <thead>
+            <tr>
+              <th>Operation</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Assets</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            {% for operation in operations %}
+
+              <tr>
+
+                <td>
+                  {{ operation.name }}
+                </td>
+
+                <td>
+                  {% if operation.categories %}
+                    {{ operation.categories|join(', ') }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+
+                <td>
+                  {{ operation.timestamp|date('d M Y, H:i') }}
+                </td>
+
+                <td>
+                  {{ operation.status|capitalize }}
+                </td>
+
+                <td>
+                  {% if operation.assets %}
+
+                    {% for asset in operation.assets %}
+                      {{ asset.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+
+                <td>
+                  <a href="{{ operation.url }}">
+                    View Operation →
+                  </a>
+                </td>
+
+              </tr>
+
+            {% endfor %}
+
+          </tbody>
+
+        </table>
+
+      {% else %}
+
+        <p>No operations have been recorded yet.</p>
+
+      {% endif %}
+
+    </section>
+
+  </main>
+
+</div>

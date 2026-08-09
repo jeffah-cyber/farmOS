@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.log_category
+  enforced:
+    module:
+      - phoenix_operations
+vid: log_category
+name: 'Fertilizer Application'
+description:
+  value: ''
+  format: null
+weight: 0

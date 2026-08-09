@@ -22,6 +22,6 @@ phoenix_core.plantations:
 phoenix_core.operations:
   title: 'Operations'
   description: 'Manage plantation operations.'
-  route_name: phoenix_plantation.dashboard
+  route_name: phoenix_operations.collection
   parent: farm.base
   weight: -70

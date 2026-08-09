@@ -1,0 +1,10 @@
+services:
+  phoenix_operations.operations:
+    class: Drupal\phoenix_operations\Service\OperationsService
+    arguments:
+      - '@entity_type.manager'
+
+  phoenix_operations.workspace:
+    class: Drupal\phoenix_operations\Service\OperationWorkspaceService
+    arguments:
+      - '@entity_type.manager'
