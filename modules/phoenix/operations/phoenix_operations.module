@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\log\Entity\LogInterface;
 
 /**
  * @file
@@ -74,4 +76,60 @@ function phoenix_operations_process_activity_form(
   }
 
   return $form;
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function phoenix_operations_token_info(): array {
+  return [
+    'tokens' => [
+      'log' => [
+        'phoenix-asset-name' => [
+          'name' => t('Phoenix asset name'),
+          'description' => t('The names of assets linked to the operation.'),
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function phoenix_operations_tokens(
+  string $type,
+  array $tokens,
+  array $data,
+  array $options,
+  BubbleableMetadata $bubbleable_metadata,
+): array {
+  $replacements = [];
+
+  if ($type !== 'log' || empty($data['log'])) {
+    return $replacements;
+  }
+
+  $log = $data['log'];
+
+  if (!$log instanceof LogInterface) {
+    return $replacements;
+  }
+
+  foreach ($tokens as $name => $original) {
+    if ($name !== 'phoenix-asset-name') {
+      continue;
+    }
+
+    $asset_names = [];
+
+    foreach ($log->get('asset')->referencedEntities() as $asset) {
+      $asset_names[] = $asset->label();
+      $bubbleable_metadata->addCacheableDependency($asset);
+    }
+
+    $replacements[$original] = implode(', ', $asset_names);
+  }
+
+  return $replacements;
 }
