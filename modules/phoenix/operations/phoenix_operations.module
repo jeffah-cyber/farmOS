@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * @file
  * Hooks for the Phoenix Operations module.
@@ -28,4 +30,48 @@ function phoenix_operations_theme(): array {
       'template' => 'phoenix-operation-workspace',
     ],
   ];
+}
+
+/**
+ * Implements hook_farm_ui_theme_field_group_items().
+ *
+ * Places essential Activity fields in Phoenix-friendly form groups.
+ */
+function phoenix_operations_farm_ui_theme_field_group_items(
+  string $entity_type,
+  string $bundle,
+): array {
+  if ($entity_type !== 'log' || $bundle !== 'activity') {
+    return [];
+  }
+
+  return [
+    'category' => 'default',
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function phoenix_operations_form_log_activity_form_alter(
+  array &$form,
+  FormStateInterface $form_state,
+): void {
+  // Run Phoenix processing after farmOS/Gin processing has completed.
+  $form['#process'][] = 'phoenix_operations_process_activity_form';
+}
+
+/**
+ * Applies final Phoenix adjustments to Activity forms.
+ */
+function phoenix_operations_process_activity_form(
+  array $form,
+  FormStateInterface $form_state,
+): array {
+  if (isset($form['category'])) {
+    $form['category']['#group'] = 'default_field_group';
+    $form['category']['#weight'] = 5;
+  }
+
+  return $form;
 }
