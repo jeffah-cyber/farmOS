@@ -16,7 +16,11 @@ function phoenix_plantation_theme(): array {
       'variables' => [
         'estate_count' => 0,
         'block_count' => 0,
+        'operation_count' => 0,
         'estate_rows' => [],
+        'estates_url' => '',
+        'plantations_url' => '',
+        'operations_url' => '',
       ],
       'template' => 'phoenix-dashboard',
     ],

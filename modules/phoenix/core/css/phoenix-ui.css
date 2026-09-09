@@ -1,17 +1,24 @@
+/* ==========================================================
+   Phoenix OS Design System v1
+   ========================================================== */
+
 body {
   background: var(--phoenix-background);
   color: var(--phoenix-body);
 }
 
-/* Workspace */
+/* ==========================================================
+   Workspace
+   ========================================================== */
 
 .phoenix-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: var(--phoenix-space-6);
   width: 100%;
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
+  padding-bottom: var(--phoenix-space-10);
 }
 
 .phoenix-workspace__header,
@@ -19,48 +26,110 @@ body {
   grid-column: 1 / -1;
 }
 
+.phoenix-workspace__content,
+.phoenix-workspace__sidebar {
+  min-width: 0;
+}
+
+/* ==========================================================
+   Workspace Hero
+   ========================================================== */
+
 .phoenix-workspace__header {
   position: relative;
   overflow: hidden;
-  padding: var(--phoenix-space-8);
+
+  padding:
+    var(--phoenix-space-8)
+    var(--phoenix-space-10);
+
   background:
+    radial-gradient(
+      circle at 88% 18%,
+      rgba(212, 175, 55, 0.18),
+      transparent 22%
+    ),
     linear-gradient(
       135deg,
-      var(--phoenix-primary) 0%,
-      var(--phoenix-primary-hover) 100%
+      var(--phoenix-primary-deep) 0%,
+      var(--phoenix-primary) 55%,
+      #087346 100%
     );
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--phoenix-radius-large);
-  box-shadow: var(--phoenix-shadow);
-  color: #ffffff;
+
+  box-shadow: var(--phoenix-shadow-large);
+
+  color: var(--phoenix-light-text);
+}
+
+.phoenix-workspace__header::before {
+  content: "PHOENIX OS";
+  position: relative;
+  z-index: 2;
+
+  display: block;
+
+  margin-bottom: var(--phoenix-space-3);
+
+  color: rgba(255, 255, 255, 0.68);
+
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
 }
 
 .phoenix-workspace__header::after {
   content: "";
+
   position: absolute;
-  top: -60px;
-  right: -40px;
-  width: 190px;
-  height: 190px;
-  border: 32px solid rgba(255, 255, 255, 0.07);
+
+  top: -105px;
+  right: -70px;
+
+  width: 300px;
+  height: 300px;
+
+  border: 48px solid rgba(255, 255, 255, 0.045);
   border-radius: 50%;
+
+  pointer-events: none;
 }
 
 .phoenix-workspace__header h1 {
   position: relative;
-  z-index: 1;
-  margin: 0 0 var(--phoenix-space-2);
+  z-index: 2;
+
+  max-width: 900px;
+
+  margin: 0 0 var(--phoenix-space-3);
+
   color: #ffffff;
-  font-size: clamp(1.8rem, 4vw, 2.7rem);
-  line-height: 1.15;
+
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 760;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
 
 .phoenix-workspace__header p {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+
+  max-width: 720px;
+
   margin: 0;
-  color: rgba(255, 255, 255, 0.85);
+
+  color: rgba(255, 255, 255, 0.8);
+
   font-size: 1rem;
+  line-height: 1.65;
 }
+
+/* ==========================================================
+   KPI Grid
+   ========================================================== */
 
 .phoenix-workspace__kpis {
   display: grid;
@@ -68,93 +137,129 @@ body {
   gap: var(--phoenix-space-5);
 }
 
-.phoenix-workspace__content,
-.phoenix-workspace__sidebar {
-  min-width: 0;
-}
-
-.phoenix-workspace__sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: var(--phoenix-space-5);
-}
-
-.phoenix-workspace__sidebar section {
-  padding: var(--phoenix-space-6);
-  background: var(--phoenix-card);
-  border: 1px solid var(--phoenix-border);
-  border-radius: var(--phoenix-radius);
-  box-shadow: var(--phoenix-shadow-small);
-}
-
-.phoenix-workspace__sidebar h2 {
-  margin: 0 0 var(--phoenix-space-3);
-  color: var(--phoenix-heading);
-  font-size: 1.15rem;
-}
-
-/* Stat cards */
-
 .phoenix-stat-card {
-  min-height: 150px;
+  position: relative;
+
+  min-height: 145px;
+
   padding: var(--phoenix-space-6);
+
+  overflow: hidden;
+
   background: var(--phoenix-card);
+
   border: 1px solid var(--phoenix-border);
+
   border-radius: var(--phoenix-radius);
+
   box-shadow: var(--phoenix-shadow-small);
+
   transition:
-    transform 160ms ease,
-    box-shadow 160ms ease,
-    border-color 160ms ease;
+    transform var(--phoenix-transition),
+    box-shadow var(--phoenix-transition),
+    border-color var(--phoenix-transition);
+}
+
+.phoenix-stat-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--phoenix-primary),
+      var(--phoenix-accent)
+    );
 }
 
 .phoenix-stat-card:hover {
-  transform: translateY(-2px);
-  border-color: #cddbd3;
+  transform: translateY(-3px);
+
+  border-color: var(--phoenix-border-strong);
+
   box-shadow: var(--phoenix-shadow);
 }
 
 .phoenix-stat-card__title {
   margin-bottom: var(--phoenix-space-4);
+
   color: var(--phoenix-muted);
-  font-size: 0.9rem;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
 .phoenix-stat-card__value {
   color: var(--phoenix-primary);
-  font-size: clamp(2rem, 5vw, 2.8rem);
-  font-weight: 750;
+
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 780;
   line-height: 1;
+
+  letter-spacing: -0.035em;
 }
 
 .phoenix-stat-card__subtitle {
   margin-top: var(--phoenix-space-4);
+
   color: var(--phoenix-muted);
+
   font-size: 0.86rem;
+  line-height: 1.45;
 }
 
-/* Panels */
+/* ==========================================================
+   Content Panels
+   ========================================================== */
 
+.phoenix-workspace__content > *,
 .phoenix-dashboard__portfolio {
-  padding: var(--phoenix-space-6);
   background: var(--phoenix-card);
+
   border: 1px solid var(--phoenix-border);
+
   border-radius: var(--phoenix-radius);
+
   box-shadow: var(--phoenix-shadow-small);
 }
 
-.phoenix-dashboard__portfolio h2 {
-  margin: 0 0 var(--phoenix-space-5);
+.phoenix-dashboard__portfolio {
+  padding: var(--phoenix-space-6);
+}
+
+.phoenix-dashboard__portfolio h2,
+.phoenix-workspace__content h2,
+.phoenix-workspace__sidebar h2 {
+  margin-top: 0;
+
   color: var(--phoenix-heading);
+
+  font-weight: 740;
+
+  letter-spacing: -0.015em;
+}
+
+.phoenix-dashboard__portfolio h2 {
+  margin-bottom: var(--phoenix-space-5);
 }
 
 .phoenix-dashboard__portfolio dl {
   display: grid;
   grid-template-columns: minmax(140px, 220px) 1fr;
-  gap: var(--phoenix-space-3) var(--phoenix-space-6);
+
+  gap:
+    var(--phoenix-space-3)
+    var(--phoenix-space-6);
+
   margin: 0;
 }
 
@@ -165,11 +270,255 @@ body {
 
 .phoenix-dashboard__portfolio dd {
   margin: 0;
+
   color: var(--phoenix-heading);
-  font-weight: 600;
+
+  font-weight: 620;
 }
 
-/* Responsive layout */
+/* ==========================================================
+   Sidebar Panels
+   ========================================================== */
+
+.phoenix-workspace__sidebar {
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--phoenix-space-5);
+}
+
+.phoenix-workspace__sidebar section {
+  padding: var(--phoenix-space-6);
+
+  background: var(--phoenix-card);
+
+  border: 1px solid var(--phoenix-border);
+
+  border-radius: var(--phoenix-radius);
+
+  box-shadow: var(--phoenix-shadow-small);
+}
+
+.phoenix-workspace__sidebar h2 {
+  margin-bottom: var(--phoenix-space-4);
+
+  font-size: 1.05rem;
+}
+
+/* ==========================================================
+   Tables
+   ========================================================== */
+
+.phoenix-workspace table {
+  width: 100%;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  color: var(--phoenix-body);
+}
+
+.phoenix-workspace thead th {
+  padding:
+    var(--phoenix-space-3)
+    var(--phoenix-space-4);
+
+  background: var(--phoenix-card-muted);
+
+  border-bottom: 1px solid var(--phoenix-border);
+
+  color: var(--phoenix-muted);
+
+  font-size: 0.72rem;
+  font-weight: 800;
+
+  letter-spacing: 0.055em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.phoenix-workspace tbody td {
+  padding:
+    var(--phoenix-space-4)
+    var(--phoenix-space-4);
+
+  border-bottom: 1px solid var(--phoenix-border);
+
+  vertical-align: middle;
+}
+
+.phoenix-workspace tbody tr {
+  transition: background var(--phoenix-transition);
+}
+
+.phoenix-workspace tbody tr:hover {
+  background: var(--phoenix-card-muted);
+}
+
+.phoenix-workspace tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ==========================================================
+   Links
+   ========================================================== */
+
+.phoenix-workspace a {
+  color: var(--phoenix-primary);
+
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.phoenix-workspace a:hover {
+  color: var(--phoenix-primary-hover);
+}
+
+/* ==========================================================
+   Buttons
+   ========================================================== */
+
+.phoenix-workspace .button,
+.phoenix-workspace a.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+
+  padding:
+    0
+    var(--phoenix-space-5);
+
+  background: var(--phoenix-primary);
+
+  border: 1px solid var(--phoenix-primary);
+
+  border-radius: 10px;
+
+  box-shadow: none;
+
+  color: #ffffff;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition:
+    background var(--phoenix-transition),
+    border-color var(--phoenix-transition),
+    transform var(--phoenix-transition),
+    box-shadow var(--phoenix-transition);
+}
+
+.phoenix-workspace .button:hover,
+.phoenix-workspace a.button:hover {
+  transform: translateY(-1px);
+
+  background: var(--phoenix-primary-hover);
+
+  border-color: var(--phoenix-primary-hover);
+
+  box-shadow: 0 6px 16px rgba(7, 92, 53, 0.16);
+
+  color: #ffffff;
+}
+
+/* ==========================================================
+   Status Badges
+   ========================================================== */
+
+.phoenix-status {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 12px;
+
+  border-radius: var(--phoenix-radius-pill);
+
+  font-size: 0.78rem;
+  font-weight: 750;
+
+  line-height: 1;
+
+  letter-spacing: 0.015em;
+}
+
+.phoenix-status--land-acquired {
+  background: var(--phoenix-success-soft);
+  color: #17693d;
+}
+
+.phoenix-status--under-development {
+  background: var(--phoenix-warning-soft);
+  color: #855d00;
+}
+
+.phoenix-status--operational {
+  background: var(--phoenix-info-soft);
+  color: #145b91;
+}
+
+.phoenix-status--expansion {
+  background: #f0eafd;
+  color: #5d2ea8;
+}
+
+.phoenix-status--suspended {
+  background: var(--phoenix-danger-soft);
+  color: var(--phoenix-danger);
+}
+
+/* ==========================================================
+   Header Metadata
+   ========================================================== */
+
+.phoenix-workspace__meta {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: var(--phoenix-space-3);
+
+  margin-top: var(--phoenix-space-4);
+}
+
+.phoenix-workspace__meta > span:first-child {
+  color: rgba(255, 255, 255, 0.88);
+
+  font-weight: 650;
+}
+
+/* ==========================================================
+   Empty States
+   ========================================================== */
+
+.phoenix-empty-state {
+  padding:
+    var(--phoenix-space-10)
+    var(--phoenix-space-6);
+
+  color: var(--phoenix-muted);
+
+  text-align: center;
+}
+
+.phoenix-empty-state strong {
+  display: block;
+
+  margin-bottom: var(--phoenix-space-2);
+
+  color: var(--phoenix-heading);
+
+  font-size: 1.05rem;
+}
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
 
 @media (max-width: 1100px) {
   .phoenix-workspace__kpis {
@@ -185,9 +534,19 @@ body {
   .phoenix-workspace__sidebar {
     grid-column: 1;
   }
+
+  .phoenix-workspace__header {
+    padding:
+      var(--phoenix-space-8)
+      var(--phoenix-space-6);
+  }
 }
 
 @media (max-width: 600px) {
+  .phoenix-workspace {
+    gap: var(--phoenix-space-4);
+  }
+
   .phoenix-workspace__header {
     padding: var(--phoenix-space-6);
   }
@@ -198,211 +557,93 @@ body {
 
   .phoenix-dashboard__portfolio dl {
     grid-template-columns: 1fr;
+
     gap: var(--phoenix-space-1);
   }
 
   .phoenix-dashboard__portfolio dd {
     margin-bottom: var(--phoenix-space-4);
   }
+
+  .phoenix-workspace table {
+    font-size: 0.88rem;
+  }
+
+  .phoenix-workspace thead th,
+  .phoenix-workspace tbody td {
+    padding:
+      var(--phoenix-space-3)
+      var(--phoenix-space-2);
+  }
 }
 
-/* ==========================================
-   Status Badge
-========================================== */
+/* ==========================================================
+   Command Centre Quick Actions
+   ========================================================== */
 
-.phoenix-status {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: .82rem;
-  font-weight: 700;
-  letter-spacing: .02em;
-}
-
-.phoenix-status--land-acquired {
-  background: #e8f7ec;
-  color: #17693d;
-}
-
-.phoenix-status--under-development {
-  background: #fff5d8;
-  color: #8a6500;
-}
-
-.phoenix-status--operational {
-  background: #e7f1ff;
-  color: #004f9f;
-}
-
-.phoenix-status--expansion {
-  background: #efe7ff;
-  color: #5d2ea8;
-}
-
-.phoenix-status--suspended {
-  background: #fdecec;
-  color: #a12828;
-}
-
-.phoenix-workspace__meta {
-  position: relative;
-  z-index: 1;
+.phoenix-quick-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   gap: var(--phoenix-space-3);
-  margin-top: var(--phoenix-space-3);
 }
 
-.phoenix-workspace__meta > span:first-child {
-  color: rgba(255, 255, 255, 0.88);
-  font-weight: 650;
-}
-
-.phoenix-workspace__header .phoenix-status {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* ==========================================
-   Tables
-========================================== */
-
-.phoenix-table {
+.phoenix-quick-actions .button,
+.phoenix-quick-actions a.button {
   width: 100%;
-  border-collapse: collapse;
+  box-sizing: border-box;
 }
 
-.phoenix-table th {
-  text-align: left;
-  padding: 14px;
-  border-bottom: 2px solid var(--phoenix-border);
+.phoenix-quick-actions .button:not(:first-child),
+.phoenix-quick-actions a.button:not(:first-child) {
+  background: var(--phoenix-card);
+  border-color: var(--phoenix-border-strong);
+  color: var(--phoenix-primary);
 }
 
-.phoenix-table td {
-  padding: 14px;
+.phoenix-quick-actions .button:not(:first-child):hover,
+.phoenix-quick-actions a.button:not(:first-child):hover {
+  background: var(--phoenix-primary-soft);
+  border-color: var(--phoenix-primary);
+  color: var(--phoenix-primary-hover);
+}
+
+/* ==========================================================
+   Command Centre System Overview
+   ========================================================== */
+
+.phoenix-system-summary {
+  display: flex;
+  flex-direction: column;
+}
+
+.phoenix-system-summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding:
+    var(--phoenix-space-3)
+    0;
+
   border-bottom: 1px solid var(--phoenix-border);
 }
 
-.phoenix-table tr:hover {
-  background: #fafafa;
+.phoenix-system-summary > div:first-child {
+  padding-top: 0;
 }
 
-.phoenix-table a {
-  color: var(--phoenix-primary);
-  text-decoration: none;
-  font-weight: 600;
+.phoenix-system-summary > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
-/* ==========================================
-   Operations Timeline
-========================================== */
-
-.phoenix-timeline {
-  position: relative;
-  margin-top: var(--phoenix-space-5);
-}
-
-.phoenix-timeline__item {
-  position: relative;
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: var(--phoenix-space-4);
-  padding-bottom: var(--phoenix-space-6);
-}
-
-.phoenix-timeline__item:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  top: 16px;
-  left: 6px;
-  bottom: 0;
-  width: 2px;
-  background: var(--phoenix-border);
-}
-
-.phoenix-timeline__marker {
-  position: relative;
-  z-index: 1;
-  width: 14px;
-  height: 14px;
-  margin-top: 5px;
-  border: 3px solid var(--phoenix-card);
-  border-radius: 50%;
-  background: var(--phoenix-primary);
-  box-shadow: 0 0 0 2px var(--phoenix-primary-soft);
-}
-
-.phoenix-timeline__content {
-  min-width: 0;
-}
-
-.phoenix-timeline__content h3 {
-  margin: 0 0 var(--phoenix-space-2);
-  color: var(--phoenix-heading);
-  font-size: 1rem;
-}
-
-.phoenix-timeline__meta {
-  margin-bottom: var(--phoenix-space-2);
+.phoenix-system-summary span {
   color: var(--phoenix-muted);
-  font-size: 0.88rem;
-}
-
-.phoenix-timeline__link {
-  color: var(--phoenix-primary);
   font-size: 0.9rem;
-  font-weight: 650;
-  text-decoration: none;
 }
 
-.phoenix-timeline__link:hover {
-  text-decoration: underline;
-}
-
-/* ==========================================
-   Action Button
-========================================== */
-
-.phoenix-action-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 16px;
-  border-radius: var(--phoenix-radius-small);
-  background: var(--phoenix-primary);
-  color: #ffffff;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.phoenix-action-button:hover {
-  background: var(--phoenix-primary-hover);
-  color: #ffffff;
-  text-decoration: none;
-}
-
-/* ==========================================
-   Workspace Actions
-========================================== */
-
-.phoenix-workspace__actions {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--phoenix-space-3);
-  margin-top: var(--phoenix-space-5);
-}
-
-.phoenix-workspace__header .phoenix-action-button {
-  background: #ffffff;
-  color: var(--phoenix-primary);
-}
-
-.phoenix-workspace__header .phoenix-action-button:hover {
-  background: var(--phoenix-primary-soft);
-  color: var(--phoenix-primary-hover);
+.phoenix-system-summary strong {
+  color: var(--phoenix-heading);
+  font-size: 1.05rem;
+  font-weight: 750;
 }

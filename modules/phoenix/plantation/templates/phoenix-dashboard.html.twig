@@ -1,47 +1,132 @@
-<div class="phoenix-dashboard">
+<div class="phoenix-workspace">
 
-  <header class="phoenix-dashboard__header">
-    <h1>Phoenix OS Dashboard</h1>
-    <p>Live operational summary for Phoenix estates.</p>
+  <header class="phoenix-workspace__header">
+    <h1>Command Centre</h1>
+    <p>
+      Enterprise overview of Phoenix estates, plantation blocks,
+      operations, and field activity.
+    </p>
+
+    <div class="phoenix-workspace__meta">
+      <span>Phoenix OS</span>
+      <span class="phoenix-status phoenix-status--operational">
+        Operational
+      </span>
+    </div>
   </header>
 
-  <section class="phoenix-dashboard__summary">
-    <article class="phoenix-dashboard__card">
-      <span class="phoenix-dashboard__label">Total Estates</span>
-      <strong class="phoenix-dashboard__value">{{ estate_count }}</strong>
+  <section class="phoenix-workspace__kpis">
+
+    <article class="phoenix-stat-card">
+      <div class="phoenix-stat-card__title">Estates</div>
+      <div class="phoenix-stat-card__value">{{ estate_count }}</div>
+      <div class="phoenix-stat-card__subtitle">
+        Registered Phoenix estates
+      </div>
     </article>
 
-    <article class="phoenix-dashboard__card">
-      <span class="phoenix-dashboard__label">Plantation Blocks</span>
-      <strong class="phoenix-dashboard__value">{{ block_count }}</strong>
+    <article class="phoenix-stat-card">
+      <div class="phoenix-stat-card__title">Plantation Blocks</div>
+      <div class="phoenix-stat-card__value">{{ block_count }}</div>
+      <div class="phoenix-stat-card__subtitle">
+        Managed plantation blocks
+      </div>
     </article>
+
+    <article class="phoenix-stat-card">
+      <div class="phoenix-stat-card__title">Operations</div>
+      <div class="phoenix-stat-card__value">{{ operation_count }}</div>
+      <div class="phoenix-stat-card__subtitle">
+        Recorded field operations
+      </div>
+    </article>
+
+    <article class="phoenix-stat-card">
+      <div class="phoenix-stat-card__title">Active Alerts</div>
+      <div class="phoenix-stat-card__value">0</div>
+      <div class="phoenix-stat-card__subtitle">
+        No active alerts
+      </div>
+    </article>
+
   </section>
 
-  <section class="phoenix-dashboard__portfolio">
-    <h2>Estate Portfolio</h2>
+  <section class="phoenix-workspace__content">
 
-    {% if estate_rows %}
-      <table>
-        <thead>
-          <tr>
-            <th>Estate</th>
-            <th>Phoenix Code</th>
-            <th>Lifecycle</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for estate in estate_rows %}
+    <div class="phoenix-dashboard__portfolio">
+      <h2>Estate Portfolio</h2>
+
+      {% if estate_rows %}
+        <table>
+          <thead>
             <tr>
-              <td>{{ estate.name }}</td>
-              <td>{{ estate.code }}</td>
-              <td>{{ estate.lifecycle }}</td>
+              <th>Estate</th>
+              <th>Phoenix Code</th>
+              <th>Lifecycle</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p>No estates have been created yet.</p>
-    {% endif %}
+          </thead>
+
+          <tbody>
+            {% for estate in estate_rows %}
+              <tr>
+                <td>{{ estate.name }}</td>
+                <td>{{ estate.code }}</td>
+                <td>{{ estate.lifecycle }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="phoenix-empty-state">
+          <strong>No estates yet</strong>
+          Create your first Phoenix estate to begin building the portfolio.
+        </div>
+      {% endif %}
+    </div>
+
   </section>
+
+  <aside class="phoenix-workspace__sidebar">
+
+    <section>
+      <h2>Quick Actions</h2>
+
+      <div class="phoenix-quick-actions">
+        <a class="button" href="{{ estates_url }}">
+          View Estates
+        </a>
+
+        <a class="button" href="{{ plantations_url }}">
+          View Plantations
+        </a>
+
+        <a class="button" href="{{ operations_url }}">
+          Operations Centre
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>System Overview</h2>
+
+      <div class="phoenix-system-summary">
+        <div>
+          <span>Estates</span>
+          <strong>{{ estate_count }}</strong>
+        </div>
+
+        <div>
+          <span>Blocks</span>
+          <strong>{{ block_count }}</strong>
+        </div>
+
+        <div>
+          <span>Operations</span>
+          <strong>{{ operation_count }}</strong>
+        </div>
+      </div>
+    </section>
+
+  </aside>
 
 </div>

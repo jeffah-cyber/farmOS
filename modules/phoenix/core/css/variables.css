@@ -1,34 +1,63 @@
 :root {
+  /* ========================================
+     Phoenix OS Design System
+     ======================================== */
+
   /* Brand */
-  --phoenix-primary: #0b6b3a;
-  --phoenix-primary-hover: #08582f;
+  --phoenix-primary: #075c35;
+  --phoenix-primary-hover: #064b2c;
+  --phoenix-primary-deep: #043d24;
   --phoenix-primary-soft: #eaf5ef;
+
   --phoenix-accent: #d4af37;
+  --phoenix-accent-soft: #f8f1d8;
 
   /* Surfaces */
-  --phoenix-background: #f5f7f8;
+  --phoenix-background: #f4f7f5;
+  --phoenix-surface: #ffffff;
   --phoenix-card: #ffffff;
-  --phoenix-card-muted: #fafbfb;
+  --phoenix-card-muted: #f8faf9;
+  --phoenix-surface-green: #f0f7f3;
 
   /* Text */
-  --phoenix-heading: #1b1f23;
-  --phoenix-body: #4b5563;
-  --phoenix-muted: #6b7280;
+  --phoenix-heading: #15201a;
+  --phoenix-body: #46524b;
+  --phoenix-muted: #718078;
+  --phoenix-light-text: #ffffff;
+
+  /* Borders */
+  --phoenix-border: #dde6e1;
+  --phoenix-border-strong: #cad8d0;
 
   /* Status */
-  --phoenix-success: #16834a;
-  --phoenix-warning: #a66a00;
-  --phoenix-danger: #b42318;
+  --phoenix-success: #158447;
+  --phoenix-success-soft: #e8f7ee;
 
-  /* Structure */
-  --phoenix-border: #e2e8ea;
+  --phoenix-warning: #9a6700;
+  --phoenix-warning-soft: #fff5d6;
+
+  --phoenix-danger: #b42318;
+  --phoenix-danger-soft: #fdecea;
+
+  --phoenix-info: #1769aa;
+  --phoenix-info-soft: #e8f2fb;
+
+  /* Radius */
   --phoenix-radius-small: 8px;
   --phoenix-radius: 14px;
-  --phoenix-radius-large: 20px;
+  --phoenix-radius-large: 22px;
+  --phoenix-radius-pill: 999px;
 
-  /* Shadow */
-  --phoenix-shadow-small: 0 2px 8px rgba(20, 35, 30, 0.05);
-  --phoenix-shadow: 0 8px 24px rgba(20, 35, 30, 0.08);
+  /* Shadows */
+  --phoenix-shadow-small:
+    0 1px 3px rgba(15, 45, 29, 0.04),
+    0 4px 12px rgba(15, 45, 29, 0.04);
+
+  --phoenix-shadow:
+    0 8px 30px rgba(15, 45, 29, 0.08);
+
+  --phoenix-shadow-large:
+    0 20px 45px rgba(15, 45, 29, 0.11);
 
   /* Spacing */
   --phoenix-space-1: 4px;
@@ -37,6 +66,11 @@
   --phoenix-space-4: 16px;
   --phoenix-space-5: 20px;
   --phoenix-space-6: 24px;
+  --phoenix-space-7: 28px;
   --phoenix-space-8: 32px;
   --phoenix-space-10: 40px;
+  --phoenix-space-12: 48px;
+
+  /* Motion */
+  --phoenix-transition: 180ms ease;
 }
