@@ -647,3 +647,61 @@ body {
   font-size: 1.05rem;
   font-weight: 750;
 }
+
+/* ==========================================================
+   Phoenix Command Centre Shell
+   ========================================================== */
+
+/*
+ * Phoenix workspaces provide their own contextual page title.
+ * Hide Gin's duplicate Drupal page title on these pages.
+ */
+body:has(.phoenix-workspace) .block-page-title-block {
+  display: none;
+}
+
+/* ==========================================================
+   Phoenix OS Navigation Sections
+   ========================================================== */
+
+/*
+ * Presentation-only section headings.
+ * Native Drupal/farmOS menu hierarchy is preserved.
+ */
+
+/* Section separation. */
+#toolbar-administration .menu-item__farm-locations,
+#toolbar-administration .menu-item__farm-setup {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(113, 128, 120, 0.22);
+}
+
+/* Shared section heading style. */
+#toolbar-administration .menu-item__phoenix_core-command_centre::before,
+#toolbar-administration .menu-item__farm-locations::before,
+#toolbar-administration .menu-item__farm-setup::before {
+  display: block;
+  box-sizing: border-box;
+  padding: 0 1rem;
+  margin: 0 0 0.55rem;
+  color: #718078;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+#toolbar-administration .menu-item__phoenix_core-command_centre::before {
+  content: "OPERATIONS";
+}
+
+#toolbar-administration .menu-item__farm-locations::before {
+  content: "FARM MANAGEMENT";
+}
+
+#toolbar-administration .menu-item__farm-setup::before {
+  content: "SYSTEM";
+}

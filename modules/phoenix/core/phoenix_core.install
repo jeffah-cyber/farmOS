@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Install, update, and uninstall hooks for Phoenix Core.
+ */
+
+/**
+ * Configure Phoenix OS branding in the Gin administration theme.
+ */
+function phoenix_core_install(): void {
+  _phoenix_core_configure_gin_branding();
+}
+
+/**
+ * Configure Phoenix OS branding for existing installations.
+ */
+function phoenix_core_update_10001(): void {
+  _phoenix_core_configure_gin_branding();
+}
+
+/**
+ * Apply Phoenix OS branding to Gin without replacing other Gin settings.
+ */
+function _phoenix_core_configure_gin_branding(): void {
+  $config = \Drupal::configFactory()->getEditable('gin.settings');
+
+  $config
+    ->set('logo.use_default', FALSE)
+    ->set(
+      'logo.path',
+      'modules/custom/phoenix_core/images/phoenix-os-logo.svg'
+    )
+    ->save();
+}
