@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - asset.type.land
+    - field.storage.asset.field_estate_tenure
+  module:
+    - options
+  enforced:
+    module:
+      - phoenix_estate
+id: asset.land.field_estate_tenure
+field_name: field_estate_tenure
+entity_type: asset
+bundle: land
+label: 'Land Tenure'
+description: 'Legal or operational basis under which Phoenix controls this estate.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

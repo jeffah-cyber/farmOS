@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\phoenix_estate\Service;
 
 use Drupal\asset\Entity\AssetInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
@@ -17,6 +18,7 @@ final class EstateWorkspaceService {
    */
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly DateFormatterInterface $dateFormatter,
   ) {}
 
   /**
@@ -76,10 +78,63 @@ final class EstateWorkspaceService {
       }
     }
 
+    $areaHectares = 'Not assigned';
+
+    if (
+      $estate->hasField('field_estate_area_hectares') &&
+      !$estate->get('field_estate_area_hectares')->isEmpty()
+    ) {
+      $value = $estate->get('field_estate_area_hectares')->value;
+      $areaHectares = number_format((float) $value, 2) . ' ha';
+    }
+
+    $tenure = 'Not assigned';
+
+    if (
+      $estate->hasField('field_estate_tenure') &&
+      !$estate->get('field_estate_tenure')->isEmpty()
+    ) {
+      $item = $estate->get('field_estate_tenure')->first();
+
+      if ($item !== NULL) {
+        $allowedValues = $item->getFieldDefinition()
+          ->getFieldStorageDefinition()
+          ->getSetting('allowed_values');
+
+        $value = $item->value;
+
+        if (isset($allowedValues[$value])) {
+          $tenure = $allowedValues[$value];
+        }
+        else {
+          $tenure = $value;
+        }
+      }
+    }
+
+    $acquisitionDate = 'Not assigned';
+
+    if (
+      $estate->hasField('field_estate_acquisition_date') &&
+      !$estate->get('field_estate_acquisition_date')->isEmpty()
+    ) {
+      $timestamp = (int) $estate->get('field_estate_acquisition_date')->value;
+
+      $acquisitionDate = $this->dateFormatter->format(
+        $timestamp,
+        'custom',
+        'd M Y',
+      );
+    }
+
     return [
       'estate_name' => $estate->label(),
       'phoenix_code' => $phoenixCode,
       'lifecycle' => $lifecycle,
+      'area_hectares' => $areaHectares,
+      'tenure' => $tenure,
+      'acquisition_date' => $acquisitionDate,
+      'edit_url' => $estate->toUrl('edit-form')->toString(),
       'block_count' => count($blockRows),
       'block_rows' => $blockRows,
     ];

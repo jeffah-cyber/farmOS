@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - asset.type.land
+    - field.storage.asset.field_estate_area_hectares
+  enforced:
+    module:
+      - phoenix_estate
+id: asset.land.field_estate_area_hectares
+field_name: field_estate_area_hectares
+entity_type: asset
+bundle: land
+label: 'Area (hectares)'
+description: 'Operational land area of the estate in hectares.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: decimal

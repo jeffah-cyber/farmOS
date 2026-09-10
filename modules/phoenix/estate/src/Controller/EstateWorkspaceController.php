@@ -53,6 +53,10 @@ final class EstateWorkspaceController extends ControllerBase {
       '#estate_name' => $data['estate_name'],
       '#phoenix_code' => $data['phoenix_code'],
       '#lifecycle' => $data['lifecycle'],
+      '#area_hectares' => $data['area_hectares'],
+      '#tenure' => $data['tenure'],
+      '#acquisition_date' => $data['acquisition_date'],
+      '#edit_url' => $data['edit_url'],
       '#block_count' => $data['block_count'],
       '#block_rows' => $data['block_rows'],
       '#attached' => [

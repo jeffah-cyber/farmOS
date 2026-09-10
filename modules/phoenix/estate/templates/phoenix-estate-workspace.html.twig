@@ -11,9 +11,21 @@
         label: lifecycle
       }) }}
     </div>
+
+    <div class="phoenix-workspace__actions">
+      <a class="button button--primary" href="{{ edit_url }}">
+        Edit Estate
+      </a>
+    </div>
   </header>
 
   <section class="phoenix-workspace__kpis">
+
+    {{ include('@phoenix_core/components/stat-card.html.twig', {
+      title: 'Estate Area',
+      value: area_hectares,
+      subtitle: 'Operational land area'
+    }) }}
 
     {{ include('@phoenix_core/components/stat-card.html.twig', {
       title: 'Plantation Blocks',
@@ -22,21 +34,15 @@
     }) }}
 
     {{ include('@phoenix_core/components/stat-card.html.twig', {
-      title: 'Workers',
-      value: '—',
-      subtitle: 'Coming soon'
+      title: 'Land Tenure',
+      value: tenure,
+      subtitle: 'Control arrangement'
     }) }}
 
     {{ include('@phoenix_core/components/stat-card.html.twig', {
-      title: 'Machinery',
-      value: '—',
-      subtitle: 'Coming soon'
-    }) }}
-
-    {{ include('@phoenix_core/components/stat-card.html.twig', {
-      title: 'Tasks Today',
-      value: '—',
-      subtitle: 'Coming soon'
+      title: 'Acquired',
+      value: acquisition_date,
+      subtitle: 'Estate acquisition date'
     }) }}
 
   </section>
@@ -53,6 +59,15 @@
 
         <dt>Lifecycle</dt>
         <dd>{{ lifecycle }}</dd>
+
+        <dt>Area</dt>
+        <dd>{{ area_hectares }}</dd>
+
+        <dt>Land Tenure</dt>
+        <dd>{{ tenure }}</dd>
+
+        <dt>Acquisition Date</dt>
+        <dd>{{ acquisition_date }}</dd>
       </dl>
 
     </section>
@@ -78,9 +93,7 @@
           {% for block in block_rows %}
 
             <tr>
-
               <td>{{ block.name }}</td>
-
               <td>{{ block.code }}</td>
 
               <td>
@@ -88,7 +101,6 @@
                   Open Workspace →
                 </a>
               </td>
-
             </tr>
 
           {% endfor %}
@@ -110,19 +122,13 @@
   <aside class="phoenix-workspace__sidebar">
 
     <section>
-
       <h2>Recent Activity</h2>
-
       <p>No activity recorded.</p>
-
     </section>
 
     <section>
-
       <h2>Alerts</h2>
-
       <p>No active alerts.</p>
-
     </section>
 
   </aside>

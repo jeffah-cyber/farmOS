@@ -12,23 +12,67 @@ declare(strict_types=1);
  */
 function phoenix_estate_theme(): array {
   return [
-
     'phoenix_estate_collection' => [
-  'variables' => [
-    'estates' => [],
-  ],
-  'template' => 'phoenix-estate-collection',
-],    
+      'variables' => [
+        'estates' => [],
+      ],
+      'template' => 'phoenix-estate-collection',
+    ],
 
     'phoenix_estate_workspace' => [
       'variables' => [
         'estate_name' => '',
         'phoenix_code' => '',
         'lifecycle' => '',
+        'area_hectares' => '',
+        'tenure' => '',
+        'acquisition_date' => '',
+        'edit_url' => '',
         'block_count' => 0,
         'block_rows' => [],
       ],
       'template' => 'phoenix-estate-workspace',
     ],
   ];
+}
+
+/**
+ * Implements hook_form_asset_land_edit_form_alter().
+ */
+function phoenix_estate_form_asset_land_edit_form_alter(
+  array &$form,
+  \Drupal\Core\Form\FormStateInterface $form_state,
+): void {
+  $form_object = $form_state->getFormObject();
+
+  if (!method_exists($form_object, 'getEntity')) {
+    return;
+  }
+
+  $asset = $form_object->getEntity();
+
+  if (
+    $asset->bundle() !== 'land' ||
+    !$asset->hasField('land_type') ||
+    $asset->get('land_type')->isEmpty() ||
+    $asset->get('land_type')->value !== 'estate'
+  ) {
+    return;
+  }
+
+  if (!isset($form['field_estate_acquisition_date']['widget'][0]['value'])) {
+    return;
+  }
+
+  $value = &$form['field_estate_acquisition_date']['widget'][0]['value'];
+
+  $value['#date_time_element'] = 'none';
+  $value['#date_time_format'] = '';
+
+  if (
+    !$asset->get('field_estate_acquisition_date')->isEmpty() &&
+    isset($value['#default_value'])
+  ) {
+    $value['#default_value']->setTime(12, 0, 0);
+  }
 }

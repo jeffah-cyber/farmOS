@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - asset
+    - options
+  enforced:
+    module:
+      - phoenix_estate
+id: asset.field_estate_tenure
+field_name: field_estate_tenure
+entity_type: asset
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: owned
+      label: Owned
+    -
+      value: leased
+      label: Leased
+    -
+      value: customary_agreement
+      label: 'Customary Agreement'
+    -
+      value: joint_venture
+      label: 'Joint Venture'
+    -
+      value: management_agreement
+      label: 'Management Agreement'
+    -
+      value: under_negotiation
+      label: 'Under Negotiation'
+    -
+      value: other
+      label: Other
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

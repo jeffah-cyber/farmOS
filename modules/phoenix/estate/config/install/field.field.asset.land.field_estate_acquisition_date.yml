@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - asset.type.land
+    - field.storage.asset.field_estate_acquisition_date
+  enforced:
+    module:
+      - phoenix_estate
+id: asset.land.field_estate_acquisition_date
+field_name: field_estate_acquisition_date
+entity_type: asset
+bundle: land
+label: 'Acquisition Date'
+description: 'Date Phoenix acquired or formally secured control of this estate.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

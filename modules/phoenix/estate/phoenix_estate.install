@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Install and update hooks for Phoenix Estate.
+ */
+
+/**
+ * Configure the Phoenix Estate fields on the land asset form.
+ */
+function phoenix_estate_install(): void {
+  _phoenix_estate_configure_land_form();
+}
+
+/**
+ * Configure Estate v2 fields for existing Phoenix OS installations.
+ */
+function phoenix_estate_update_10001(): void {
+  _phoenix_estate_configure_land_form();
+}
+
+/**
+ * Adds Phoenix Estate fields to the default land asset form.
+ */
+function _phoenix_estate_configure_land_form(): void {
+  $display = \Drupal::service('entity_display.repository')
+    ->getFormDisplay('asset', 'land', 'default');
+
+  $display
+    ->setComponent('field_estate_area_hectares', [
+      'type' => 'number',
+      'weight' => 30,
+      'region' => 'content',
+      'settings' => [
+        'placeholder' => '',
+      ],
+    ])
+    ->setComponent('field_estate_tenure', [
+      'type' => 'options_select',
+      'weight' => 31,
+      'region' => 'content',
+      'settings' => [],
+    ])
+    ->setComponent('field_estate_acquisition_date', [
+      'type' => 'datetime_timestamp',
+      'weight' => 32,
+      'region' => 'content',
+      'settings' => [],
+    ])
+    ->save();
+}
