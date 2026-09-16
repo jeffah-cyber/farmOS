@@ -123,7 +123,42 @@
 
     <section>
       <h2>Recent Activity</h2>
-      <p>No activity recorded.</p>
+
+      {% if recent_activities %}
+
+        <div class="phoenix-activity-list">
+
+          {% for activity in recent_activities %}
+
+            <article class="phoenix-activity-list__item">
+
+              <div>
+                <strong>{{ activity.category }}</strong>
+                <div>{{ activity.blocks }}</div>
+              </div>
+
+              <div>
+                {{ activity.date }}
+              </div>
+
+              <div>
+                <a href="{{ activity.url }}">
+                  Open →
+                </a>
+              </div>
+
+            </article>
+
+          {% endfor %}
+
+        </div>
+
+      {% else %}
+
+        <p>No activity recorded.</p>
+
+      {% endif %}
+
     </section>
 
     <section>

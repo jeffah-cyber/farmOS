@@ -56,6 +56,66 @@ final class EstateWorkspaceService {
       ];
     }
 
+    /*
+     * Load recent Activity logs linked to any Plantation Block
+     * belonging to this Estate.
+     */
+    $recentActivities = [];
+
+    if (!empty($blockIds)) {
+      $logStorage = $this->entityTypeManager->getStorage('log');
+
+      $logIds = $logStorage->getQuery()
+        ->condition('type', 'activity')
+        ->condition('asset.target_id', array_values($blockIds), 'IN')
+        ->sort('timestamp', 'DESC')
+        ->range(0, 10)
+        ->accessCheck(TRUE)
+        ->execute();
+
+      $logs = $logStorage->loadMultiple($logIds);
+
+      foreach ($logs as $log) {
+        $categories = [];
+
+        if ($log->hasField('category')) {
+          foreach ($log->get('category')->referencedEntities() as $category) {
+            $categories[] = $category->label();
+          }
+        }
+
+        $activityBlocks = [];
+
+        if ($log->hasField('asset')) {
+          foreach ($log->get('asset')->referencedEntities() as $asset) {
+            if (isset($blocks[$asset->id()])) {
+              $activityBlocks[] = $asset->label();
+            }
+          }
+        }
+
+        $timestamp = (int) $log->get('timestamp')->value;
+
+        $recentActivities[] = [
+          'id' => $log->id(),
+          'name' => $log->label(),
+          'category' => !empty($categories)
+            ? implode(', ', $categories)
+            : 'Activity',
+          'blocks' => !empty($activityBlocks)
+            ? implode(', ', $activityBlocks)
+            : 'Not assigned',
+          'date' => $this->dateFormatter->format(
+            $timestamp,
+            'custom',
+            'd M Y',
+          ),
+          'status' => $log->get('status')->value ?? '',
+          'url' => '/admin/phoenix/operation/' . $log->id(),
+        ];
+      }
+    }
+
     $phoenixCode = 'Not assigned';
 
     if (
@@ -137,6 +197,7 @@ final class EstateWorkspaceService {
       'edit_url' => $estate->toUrl('edit-form')->toString(),
       'block_count' => count($blockRows),
       'block_rows' => $blockRows,
+      'recent_activities' => $recentActivities,
     ];
   }
 

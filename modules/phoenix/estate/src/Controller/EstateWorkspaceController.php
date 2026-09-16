@@ -59,6 +59,7 @@ final class EstateWorkspaceController extends ControllerBase {
       '#edit_url' => $data['edit_url'],
       '#block_count' => $data['block_count'],
       '#block_rows' => $data['block_rows'],
+      '#recent_activities' => $data['recent_activities'],
       '#attached' => [
         'library' => [
           'phoenix_core/ui',
