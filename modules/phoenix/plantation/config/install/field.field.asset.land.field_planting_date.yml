@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.asset.field_planting_date
+  module:
+    - asset
+  enforced:
+    module:
+      - phoenix_plantation
+id: asset.land.field_planting_date
+field_name: field_planting_date
+entity_type: asset
+bundle: land
+label: 'Planting Date'
+description: 'Date planting was established for this plantation block.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

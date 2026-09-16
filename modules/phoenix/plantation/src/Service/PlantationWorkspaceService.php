@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\phoenix_plantation\Service;
 
 use Drupal\asset\Entity\AssetInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
@@ -17,6 +18,7 @@ final class PlantationWorkspaceService {
    */
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly DateFormatterInterface $dateFormatter,
   ) {}
 
   /**
@@ -45,15 +47,80 @@ final class PlantationWorkspaceService {
       $phoenixCode = $block->get('field_phoenix_code')->value;
     }
 
+    $treeCountValue = NULL;
     $treeCount = '—';
 
     if (
       $block->hasField('field_tree_count') &&
       !$block->get('field_tree_count')->isEmpty()
     ) {
-      $treeCount = number_format(
-        (int) $block->get('field_tree_count')->value
+      $treeCountValue = (int) $block->get('field_tree_count')->value;
+      $treeCount = number_format($treeCountValue);
+    }
+
+    $areaValue = NULL;
+    $area = '—';
+
+    if (
+      $block->hasField('field_block_area_hectares') &&
+      !$block->get('field_block_area_hectares')->isEmpty()
+    ) {
+      $areaValue = (float) $block->get('field_block_area_hectares')->value;
+      $area = number_format($areaValue, 2) . ' ha';
+    }
+
+    $plantingDate = 'Not assigned';
+    $age = '—';
+
+    if (
+      $block->hasField('field_planting_date') &&
+      !$block->get('field_planting_date')->isEmpty()
+    ) {
+      $plantingTimestamp = (int) $block->get('field_planting_date')->value;
+
+      $plantingDate = $this->dateFormatter->format(
+        $plantingTimestamp,
+        'custom',
+        'd M Y',
       );
+
+      $planting = new \DateTimeImmutable('@' . $plantingTimestamp);
+      $planting = $planting->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+
+      $today = new \DateTimeImmutable('today');
+      $interval = $planting->diff($today);
+
+      if ($interval->invert === 0) {
+        $ageParts = [];
+
+        if ($interval->y > 0) {
+          $ageParts[] = $interval->y . ' ' .
+            ($interval->y === 1 ? 'year' : 'years');
+        }
+
+        if ($interval->m > 0) {
+          $ageParts[] = $interval->m . ' ' .
+            ($interval->m === 1 ? 'month' : 'months');
+        }
+
+        if (empty($ageParts)) {
+          $ageParts[] = $interval->d . ' ' .
+            ($interval->d === 1 ? 'day' : 'days');
+        }
+
+        $age = implode(' ', $ageParts);
+      }
+    }
+
+    $plantingDensity = '—';
+
+    if (
+      $treeCountValue !== NULL &&
+      $areaValue !== NULL &&
+      $areaValue > 0
+    ) {
+      $density = $treeCountValue / $areaValue;
+      $plantingDensity = number_format($density, 0) . ' trees/ha';
     }
 
     $recentActivities = [];
@@ -84,8 +151,10 @@ final class PlantationWorkspaceService {
       'phoenix_code' => $phoenixCode,
       'estate_name' => $estateName,
       'tree_count' => $treeCount,
-      'area' => '—',
-      'age' => '—',
+      'area' => $area,
+      'planting_date' => $plantingDate,
+      'age' => $age,
+      'planting_density' => $plantingDensity,
       'health' => 'Not assessed',
       'recent_activities' => $recentActivities,
     ];

@@ -210,3 +210,32 @@ function phoenix_plantation_update_10002(): string {
 
   return 'Tree Count field was added to Land assets.';
 }
+
+/**
+ * Adds Plantation Block Profile fields to Land forms.
+ */
+function phoenix_plantation_update_10003(): string {
+  $repository = \Drupal::service('entity_display.repository');
+
+  $formDisplay = $repository->getFormDisplay('asset', 'land', 'default');
+
+  $formDisplay->setComponent('field_block_area_hectares', [
+    'type' => 'number',
+    'weight' => 8,
+    'region' => 'content',
+    'settings' => [
+      'placeholder' => '',
+    ],
+  ]);
+
+  $formDisplay->setComponent('field_planting_date', [
+    'type' => 'datetime_timestamp',
+    'weight' => 9,
+    'region' => 'content',
+    'settings' => [],
+  ]);
+
+  $formDisplay->save();
+
+  return 'Plantation Block Profile fields were added to the Land form.';
+}

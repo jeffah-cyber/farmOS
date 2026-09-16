@@ -39,7 +39,9 @@ function phoenix_plantation_theme(): array {
         'estate_name' => '',
         'tree_count' => '—',
         'area' => '—',
+        'planting_date' => '',
         'age' => '—',
+        'planting_density' => '—',
         'health' => '',
         'recent_activities' => [],
         'record_operation_url' => '',
@@ -47,4 +49,47 @@ function phoenix_plantation_theme(): array {
       'template' => 'phoenix-plantation-workspace',
     ],
   ];
+}
+
+/**
+ * Implements hook_form_asset_land_edit_form_alter().
+ *
+ * Makes Planting Date a date-only field for Plantation Blocks.
+ */
+function phoenix_plantation_form_asset_land_edit_form_alter(
+  array &$form,
+  \Drupal\Core\Form\FormStateInterface $form_state,
+): void {
+  $form_object = $form_state->getFormObject();
+
+  if (!method_exists($form_object, 'getEntity')) {
+    return;
+  }
+
+  $asset = $form_object->getEntity();
+
+  if (
+    $asset->bundle() !== 'land' ||
+    !$asset->hasField('land_type') ||
+    $asset->get('land_type')->isEmpty() ||
+    $asset->get('land_type')->value !== 'plantation_block'
+  ) {
+    return;
+  }
+
+  if (!isset($form['field_planting_date']['widget'][0]['value'])) {
+    return;
+  }
+
+  $value = &$form['field_planting_date']['widget'][0]['value'];
+
+  $value['#date_time_element'] = 'none';
+  $value['#date_time_format'] = '';
+
+  if (
+    !$asset->get('field_planting_date')->isEmpty() &&
+    isset($value['#default_value'])
+  ) {
+    $value['#default_value']->setTime(12, 0, 0);
+  }
 }
