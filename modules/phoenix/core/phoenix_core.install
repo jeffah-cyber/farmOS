@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 function phoenix_core_install(): void {
   _phoenix_core_configure_gin_branding();
+  _phoenix_core_configure_upstream_branding();
 }
 
 /**
@@ -35,3 +36,29 @@ function _phoenix_core_configure_gin_branding(): void {
     )
     ->save();
 }
+
+/**
+ * Remove inherited farmOS product branding for existing installations.
+ */
+function phoenix_core_update_10002(): void {
+  _phoenix_core_configure_upstream_branding();
+}
+
+/**
+ * Configure upstream branding for the Phoenix OS application shell.
+ *
+ * Phoenix OS retains farmOS licensing and attribution in the repository,
+ * while the application interface uses Phoenix OS product branding.
+ */
+function _phoenix_core_configure_upstream_branding(): void {
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block')
+    ->load('farm_powered');
+
+  if ($block !== NULL) {
+    $block
+      ->setStatus(FALSE)
+      ->save();
+  }
+}
+
