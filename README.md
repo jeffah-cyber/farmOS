@@ -1,80 +1,203 @@
-# farmOS
+# Phoenix OS
 
-[![Licence](https://img.shields.io/badge/Licence-GPL%202.0-blue.svg)](https://opensource.org/licenses/GPL-2.0/)
-[![Release](https://img.shields.io/github/release/farmOS/farmOS.svg?style=flat)](https://github.com/farmOS/farmOS/releases)
-[![Last commit](https://img.shields.io/github/last-commit/farmOS/farmOS.svg?style=flat)](https://github.com/farmOS/farmOS/commits)
-[![Docker](https://img.shields.io/docker/pulls/farmos/farmos.svg)](https://hub.docker.com/r/farmos/farmos/)
-[![Chat](https://img.shields.io/matrix/farmOS:matrix.org.svg)](https://app.element.io/#/room/#farmOS:matrix.org)
-[![Backers on Open Collective](https://opencollective.com/farmOS/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/farmOS/sponsors/badge.svg)](#sponsors)
-[![DPG Badge](https://img.shields.io/badge/Verified-DPG%20(Since%20%202022)-3333AB?logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iMzEiIGhlaWdodD0iMzMiIHZpZXdCb3g9IjAgMCAzMSAzMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE0LjIwMDggMjEuMzY3OEwxMC4xNzM2IDE4LjAxMjRMMTEuNTIxOSAxNi40MDAzTDEzLjk5MjggMTguNDU5TDE5LjYyNjkgMTIuMjExMUwyMS4xOTA5IDEzLjYxNkwxNC4yMDA4IDIxLjM2NzhaTTI0LjYyNDEgOS4zNTEyN0wyNC44MDcxIDMuMDcyOTdMMTguODgxIDUuMTg2NjJMMTUuMzMxNCAtMi4zMzA4MmUtMDVMMTEuNzgyMSA1LjE4NjYyTDUuODU2MDEgMy4wNzI5N0w2LjAzOTA2IDkuMzUxMjdMMCAxMS4xMTc3TDMuODQ1MjEgMTYuMDg5NUwwIDIxLjA2MTJMNi4wMzkwNiAyMi44Mjc3TDUuODU2MDEgMjkuMTA2TDExLjc4MjEgMjYuOTkyM0wxNS4zMzE0IDMyLjE3OUwxOC44ODEgMjYuOTkyM0wyNC44MDcxIDI5LjEwNkwyNC42MjQxIDIyLjgyNzdMMzAuNjYzMSAyMS4wNjEyTDI2LjgxNzYgMTYuMDg5NUwzMC42NjMxIDExLjExNzdMMjQuNjI0MSA5LjM1MTI3WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==)](https://digitalpublicgoods.net/r/farmOS)
+**Agricultural Operations & Intelligence Platform**
 
-farmOS is a web-based application for farm management, planning, and record
-keeping. It is developed by a community of volunteers and aims to provide a
-standard platform for farmers, developers, and researchers to build upon.
+Phoenix OS is an agricultural enterprise management platform being developed for plantation, processing, and integrated agribusiness operations.
 
-Official website: [farmOS.org](https://farmOS.org)
+The project is designed to provide a unified operational system for managing agricultural estates from land acquisition and plantation establishment through field operations, harvesting, processing, inventory, finance, and enterprise intelligence.
 
-## GETTING STARTED
+> **Development status:** Phoenix OS v1 — Active Development
 
-If you would like to install and host farmOS yourself, see the official
-documentation on farmOS.org: https://farmOS.org/hosting/install
+---
 
-If you would like to pay for hosting, [Farmier](https://farmier.com) provides
-affordable options for individual farms and organizations.
+## Current Capabilities
 
-## MAINTAINERS
+Phoenix OS currently includes:
 
-Current maintainers:
- * Michael Stenta (m.stenta) - https://drupal.org/user/581414
+- Estate Management
+- Estate Operational Intelligence
+- Plantation Block Management
+- Plantation Block Profiles
+- Agricultural Operations
+- Estate and Plantation Workspaces
+- Operational dashboards
+- Phoenix-specific navigation and interface
 
-This project has been sponsored by:
+Current operational data is built on real farm records rather than static dashboard data.
 
- * [Farmier](http://farmier.com)
- * [Cornell University](http://www.cornell.edu)
- * [Vermont Agency of Agriculture Food & Markets](http://agriculture.vermont.gov)
- * [Vermont Housing & Conservation Board](http://www.vhcb.org)
- * [UVM Extension](https://www.uvm.edu/extension)
- * [Globetrotter Foundation](http://globetrotterfoundation.org)
- * [Vermont Vegetable and Berry Growers Association](http://www.uvm.edu/vtvegandberry)
- * [Pennsylvania Association for Sustainable Agriculture](https://pasafarming.org)
- * [Natural Resources Conservation Service](https://www.nrcs.usda.gov)
- * [The United States Forest Service - International Programs](https://www.fs.fed.us/about-agency/international-programs)
- * [The National Forestry Authority of Uganda](https://www.nfa.org.ug/)
- * [Our Sci](http://our-sci.net)
- * [Bionutrient Food Association](https://bionutrient.org)
- * [Foundation for Food and Agriculture Research](https://foundationfar.org/)
- * [PVAMU College of Agriculture and Human Sciences](https://www.pvamu.edu/cahs/)
- * [Rothamsted Research](https://www.rothamsted.ac.uk/)
- * [OpenTEAM](https://openteam.community)
- * [Wolfe's Neck Center for Agriculture and the Environment](https://www.wolfesneck.org)
- * [Rooted Solutions](https://www.rootedsolutions.io/)
- * [Cal Poly Initiative for Climate Leadership and Resilience](https://climate.calpoly.edu/)
- * [Upper Salinas-Las Tablas Resource Conservation District](https://www.us-ltrcd.org/)
- * [Point Blue Conservation Science](https://www.pointblue.org/)
+---
 
-## CONTRIBUTORS
+## Current Architecture
 
-This project exists thanks to all the people who contribute.
-<a href="https://github.com/farmOS/farmOS/graphs/contributors"><img src="https://opencollective.com/farmOS/contributors.svg?width=890&button=false" /></a>
+```text
+Phoenix OS
+│
+├── Phoenix Core
+│   └── Branding, navigation and shared platform services
+│
+├── Phoenix Estate
+│   └── Estate management and operational intelligence
+│
+├── Phoenix Plantation
+│   └── Plantation blocks and block intelligence
+│
+└── Phoenix Operations
+    └── Agricultural operation records
+```
 
-## OPENCOLLECTIVE BACKERS
+Phoenix OS extends the farmOS and Drupal architecture rather than recreating mature agricultural data-management capabilities unnecessarily.
 
-Thank you to all our OpenCollective backers! [[Become a backer](https://opencollective.com/farmOS#backer)]
+Core farmOS concepts such as assets, logs, locations, geometry, people, and API infrastructure can therefore be extended into Phoenix-specific enterprise workflows.
 
-<a href="https://opencollective.com/farmOS#backers" target="_blank"><img src="https://opencollective.com/farmOS/backers.svg?width=890"></a>
+---
 
-## OPENCOLLECTIVE SPONSORS
+## Development Roadmap
 
-Support this project by becoming an OpenCollective sponsor. [[Become a sponsor](https://opencollective.com/farmOS#sponsor)]
+| Milestone | Status |
+|---|---|
+| Estate Management v2 | Complete |
+| Estate Operational Intelligence | Complete |
+| Plantation Management v2 | Complete |
+| Tasks & Scheduling | Next |
+| Workforce & Equipment | Planned |
+| Inventory & Procurement | Planned |
+| Harvest Management | Planned |
+| Mill & Manufacturing | Planned |
+| Finance | Planned |
+| Livestock & Greenhouse | Planned |
+| Phoenix Root | Planned |
+| Mobile, GIS & IoT | Planned |
+| AI & Decision Support | Planned |
+| Integration & Release | Planned |
 
-<a href="https://opencollective.com/farmOS/sponsor/0/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/1/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/2/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/3/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/4/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/5/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/6/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/7/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/8/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/farmOS/sponsor/9/website" target="_blank"><img src="https://opencollective.com/farmOS/sponsor/9/avatar.svg"></a>
+---
+
+## Development Philosophy
+
+Phoenix OS follows a business-first development process:
+
+```text
+Business Problem
+        ↓
+Business Analysis
+        ↓
+Domain Model
+        ↓
+Software Design
+        ↓
+Implementation
+        ↓
+Testing
+        ↓
+Documentation
+        ↓
+Git Commit
+        ↓
+GitHub
+```
+
+The objective is to build agricultural software around real operational requirements rather than adding features without a defined business purpose.
+
+---
+
+## Technology
+
+Phoenix OS currently uses:
+
+- farmOS 4.x
+- Drupal
+- PHP
+- PostgreSQL
+- Docker
+- Drush
+- Twig
+- CSS
+- Git and GitHub
+
+Development is currently performed using Docker in a WSL2-based development environment.
+
+---
+
+## Open-Source Foundation
+
+Phoenix OS is built on and extends the open-source **farmOS** project.
+
+farmOS provides the underlying agricultural record-management architecture on which parts of Phoenix OS are being developed.
+
+farmOS is a registered trademark of its respective owner. Phoenix OS is an independent project and is not presented as the official farmOS distribution.
+
+Upstream project:
+
+- https://farmOS.org
+- https://github.com/farmOS/farmOS
+
+Phoenix OS retains the applicable open-source copyright and licensing notices from the upstream project.
+
+See:
+
+- `LICENSE.txt`
+- `COPYRIGHT.txt`
+
+for licensing and copyright information.
+
+---
+
+## Project Vision
+
+Phoenix OS is intended to evolve into an integrated agricultural enterprise platform connecting:
+
+```text
+Land
+  ↓
+Plantations
+  ↓
+Operations
+  ↓
+Workforce
+  ↓
+Inputs
+  ↓
+Harvest
+  ↓
+Processing
+  ↓
+Inventory
+  ↓
+Finance
+  ↓
+Management Intelligence
+```
+
+Future capabilities are planned to include GIS, mobile field operations, IoT integration, analytics, and AI-assisted agricultural decision support.
+
+---
+
+## Repository Structure
+
+Phoenix-specific modules are maintained under:
+
+```text
+modules/phoenix/
+```
+
+Phoenix technical documentation is maintained under:
+
+```text
+docs/phoenix/
+```
+
+Active development is currently taking place on the:
+
+```text
+phoenix-os
+```
+
+branch.
+
+---
+
+## License and Attribution
+
+This repository is derived from and extends GPL-licensed farmOS software.
+
+Refer to `LICENSE.txt` and `COPYRIGHT.txt` for the applicable licensing terms and upstream copyright notices.
