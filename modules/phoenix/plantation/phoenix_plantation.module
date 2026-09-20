@@ -1,11 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @file
  * Hooks for the Phoenix Plantation module.
  */
+
+declare(strict_types=1);
+
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_theme().
@@ -44,6 +46,8 @@ function phoenix_plantation_theme(): array {
         'planting_density' => '—',
         'health' => '',
         'recent_activities' => [],
+        'upcoming_tasks' => [],
+        'add_task_url' => '',
         'record_operation_url' => '',
       ],
       'template' => 'phoenix-plantation-workspace',
@@ -58,7 +62,7 @@ function phoenix_plantation_theme(): array {
  */
 function phoenix_plantation_form_asset_land_edit_form_alter(
   array &$form,
-  \Drupal\Core\Form\FormStateInterface $form_state,
+  FormStateInterface $form_state,
 ): void {
   $form_object = $form_state->getFormObject();
 

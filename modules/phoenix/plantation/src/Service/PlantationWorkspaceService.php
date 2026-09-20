@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\phoenix_plantation\Service;
 
-use Drupal\asset\Entity\AssetInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
+use Drupal\asset\Entity\AssetInterface;
 
 /**
  * Provides data for an individual Plantation Block Workspace.
@@ -157,7 +158,51 @@ final class PlantationWorkspaceService {
       'planting_density' => $plantingDensity,
       'health' => 'Not assessed',
       'recent_activities' => $recentActivities,
+      'upcoming_tasks' => $this->getUpcomingTasks($block),
     ];
+  }
+
+  /**
+   * Returns pending activity logs, including overdue work, in due-date order.
+   *
+   * Pending farmOS logs use their timestamp as the scheduled date. Completed
+   * and abandoned logs remain available through the existing Operations views.
+   */
+  public function getUpcomingTasks(AssetInterface $block): array {
+    $storage = $this->entityTypeManager->getStorage('log');
+    $ids = $storage->getQuery()
+      ->condition('type', 'activity')
+      ->condition('asset.target_id', $block->id())
+      ->condition('status', 'pending')
+      ->sort('timestamp', 'ASC')
+      ->sort('id', 'ASC')
+      ->accessCheck(TRUE)
+      ->execute();
+
+    $tasks = [];
+    foreach ($storage->loadMultiple($ids) as $log) {
+      if (!$log->access('view')) {
+        continue;
+      }
+      $tasks[] = [
+        'name' => $log->label(),
+        'due_date' => $this->dateFormatter->format(
+          (int) $log->get('timestamp')->value, 'custom', 'd M Y',
+        ),
+        'status' => $log->get('status')->first()->getLabel(),
+        'url' => $log->toUrl()->toString(),
+        'edit_url' => $log->access('update')
+          ? $log->toUrl('edit-form', [
+            'query' => [
+              'destination' => Url::fromRoute(
+                'phoenix_plantation.workspace', ['asset' => $block->id()],
+              )->toString(),
+            ],
+          ])->toString()
+          : NULL,
+      ];
+    }
+    return $tasks;
   }
 
 }

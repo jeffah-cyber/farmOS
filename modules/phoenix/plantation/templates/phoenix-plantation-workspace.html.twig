@@ -139,8 +139,25 @@
   <aside class="phoenix-workspace__sidebar">
 
     <section>
-      <h2>Upcoming Tasks</h2>
-      <p>No scheduled tasks.</p>
+      <h2>{{ 'Upcoming Tasks'|t }}</h2>
+      {% if add_task_url %}
+        <p><a href="{{ add_task_url }}" class="phoenix-action-button">{{ '+ Add Task'|t }}</a></p>
+      {% endif %}
+      {% if upcoming_tasks %}
+        <ul>
+          {% for task in upcoming_tasks %}
+            <li>
+              <a href="{{ task.url }}">{{ task.name }}</a>
+              <div>{{ 'Due'|t }}: {{ task.due_date }} · {{ task.status }}</div>
+              {% if task.edit_url %}
+                <a href="{{ task.edit_url }}">{{ 'Edit task / status'|t }}</a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>{{ 'No scheduled tasks.'|t }}</p>
+      {% endif %}
     </section>
 
     <section>

@@ -26,3 +26,18 @@ phoenix_plantation.workspace:
     parameters:
       asset:
         type: entity:asset
+
+phoenix_plantation.task_add:
+  path: '/admin/phoenix/plantation/{asset}/task/add'
+  defaults:
+    _form: '\Drupal\phoenix_plantation\Form\PlantationTaskForm'
+    _title: 'Add Task'
+  requirements:
+    _permission: 'access administration pages'
+    _entity_access: 'asset.view'
+    _entity_create_access: 'log:activity'
+    asset: '\d+'
+  options:
+    parameters:
+      asset:
+        type: entity:asset

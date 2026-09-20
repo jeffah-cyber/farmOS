@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\phoenix_plantation\Controller;
 
-use Drupal\asset\Entity\AssetInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
+use Drupal\asset\Entity\AssetInterface;
 use Drupal\phoenix_plantation\Service\PlantationWorkspaceService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -84,6 +84,12 @@ final class PlantationWorkspaceController extends ControllerBase {
       '#planting_density' => $data['planting_density'],
       '#health' => $data['health'],
       '#recent_activities' => $data['recent_activities'],
+      '#upcoming_tasks' => $data['upcoming_tasks'],
+      '#add_task_url' => Url::fromRoute(
+        'phoenix_plantation.task_add', ['asset' => $asset->id()],
+      )->access() ? Url::fromRoute(
+        'phoenix_plantation.task_add', ['asset' => $asset->id()],
+      )->toString() : NULL,
       '#record_operation_url' => $recordOperationUrl,
       '#attached' => [
         'library' => [
@@ -91,12 +97,14 @@ final class PlantationWorkspaceController extends ControllerBase {
         ],
       ],
       '#cache' => [
+        'max-age' => 0,
         'tags' => array_merge(
           $asset->getCacheTags(),
           ['asset_list', 'log_list'],
         ),
         'contexts' => [
-          'user.permissions',
+          'user',
+          'timezone',
         ],
       ],
     ];
