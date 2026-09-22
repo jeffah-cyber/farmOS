@@ -146,14 +146,33 @@
       {% if upcoming_tasks %}
         <ul>
           {% for task in upcoming_tasks %}
-            <li>
-              <a href="{{ task.url }}">{{ task.name }}</a>
-              <div>{{ 'Due'|t }}: {{ task.due_date }} · {{ task.status }}</div>
-              {% if task.edit_url %}
-                <a href="{{ task.edit_url }}">{{ 'Edit task / status'|t }}</a>
-              {% endif %}
-            </li>
-          {% endfor %}
+<li>
+  <a href="{{ task.url }}">{{ task.name }}</a>
+
+  <div>
+    {{ 'Due'|t }}: {{ task.due_date }} · {{ task.status }}
+  </div>
+
+  {% if task.workers %}
+    <div>
+      <strong>{{ 'Workers'|t }}:</strong>
+      {{ task.workers|join(', ') }}
+    </div>
+  {% endif %}
+
+  {% if task.equipment %}
+    <div>
+      <strong>{{ 'Equipment'|t }}:</strong>
+      {{ task.equipment|join(', ') }}
+    </div>
+  {% endif %}
+
+  {% if task.edit_url %}
+    <a href="{{ task.edit_url }}">
+      {{ 'Edit task / status'|t }}
+    </a>
+  {% endif %}
+</li>          {% endfor %}
         </ul>
       {% else %}
         <p>{{ 'No scheduled tasks.'|t }}</p>

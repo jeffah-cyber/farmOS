@@ -20,38 +20,59 @@
 
       <dl>
         <dt>Status</dt>
-        <dt>Category</dt>
-<dd>
-  {% if operation.categories %}
-    {{ operation.categories|join(', ') }}
-  {% else %}
-    —
-  {% endif %}
-</dd>
         <dd>{{ operation.status|capitalize }}</dd>
+
+        <dt>Category</dt>
+        <dd>
+          {% if operation.categories %}
+            {{ operation.categories|join(', ') }}
+          {% else %}
+            —
+          {% endif %}
+        </dd>
 
         <dt>Date</dt>
         <dd>{{ operation.timestamp|date('d M Y, H:i') }}</dd>
 
-        <dt>Assets</dt>
+        <dt>Plantation Block</dt>
         <dd>
-          {% if operation.assets %}
-            {% for asset in operation.assets %}
-              {{ asset.name }}{% if not loop.last %}, {% endif %}
+          {% if operation.plantation_blocks %}
+            {% for block in operation.plantation_blocks %}
+              {{ block.name }}{% if not loop.last %}, {% endif %}
             {% endfor %}
           {% else %}
             —
           {% endif %}
         </dd>
 
-        <dt>Owner</dt>
+        <dt>Workers</dt>
         <dd>
-          {% if operation.owners %}
-            {{ operation.owners|join(', ') }}
+          {% if operation.workers %}
+            {{ operation.workers|join(', ') }}
           {% else %}
             —
           {% endif %}
         </dd>
+
+        <dt>Equipment</dt>
+        <dd>
+          {% if operation.equipment %}
+            {% for item in operation.equipment %}
+              {{ item.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            —
+          {% endif %}
+        </dd>
+
+        {% if operation.assets %}
+          <dt>Other Assets</dt>
+          <dd>
+            {% for asset in operation.assets %}
+              {{ asset.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          </dd>
+        {% endif %}
 
         <dt>Movement</dt>
         <dd>{{ operation.is_movement ? 'Yes' : 'No' }}</dd>

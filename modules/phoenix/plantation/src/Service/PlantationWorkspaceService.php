@@ -169,40 +169,65 @@ final class PlantationWorkspaceService {
    * and abandoned logs remain available through the existing Operations views.
    */
   public function getUpcomingTasks(AssetInterface $block): array {
-    $storage = $this->entityTypeManager->getStorage('log');
-    $ids = $storage->getQuery()
-      ->condition('type', 'activity')
-      ->condition('asset.target_id', $block->id())
-      ->condition('status', 'pending')
-      ->sort('timestamp', 'ASC')
-      ->sort('id', 'ASC')
-      ->accessCheck(TRUE)
-      ->execute();
+  $storage = $this->entityTypeManager->getStorage('log');
 
-    $tasks = [];
-    foreach ($storage->loadMultiple($ids) as $log) {
-      if (!$log->access('view')) {
-        continue;
-      }
-      $tasks[] = [
-        'name' => $log->label(),
-        'due_date' => $this->dateFormatter->format(
-          (int) $log->get('timestamp')->value, 'custom', 'd M Y',
-        ),
-        'status' => $log->get('status')->first()->getLabel(),
-        'url' => $log->toUrl()->toString(),
-        'edit_url' => $log->access('update')
-          ? $log->toUrl('edit-form', [
-            'query' => [
-              'destination' => Url::fromRoute(
-                'phoenix_plantation.workspace', ['asset' => $block->id()],
-              )->toString(),
-            ],
-          ])->toString()
-          : NULL,
-      ];
+  $ids = $storage->getQuery()
+    ->condition('type', 'activity')
+    ->condition('asset.target_id', $block->id())
+    ->condition('status', 'pending')
+    ->sort('timestamp', 'ASC')
+    ->sort('id', 'ASC')
+    ->accessCheck(TRUE)
+    ->execute();
+
+  $tasks = [];
+
+  foreach ($storage->loadMultiple($ids) as $log) {
+    if (!$log->access('view')) {
+      continue;
     }
-    return $tasks;
+
+    $workers = [];
+
+    foreach ($log->get('owner')->referencedEntities() as $worker) {
+      $workers[] = $worker->getDisplayName();
+    }
+
+    $equipment = [];
+
+    foreach ($log->get('asset')->referencedEntities() as $taskAsset) {
+      // Equipment and Plantation Blocks share the farmOS asset reference.
+      // Only expose equipment here as a task resource.
+      if ($taskAsset->bundle() === 'equipment') {
+        $equipment[] = $taskAsset->label();
+      }
+    }
+
+    $tasks[] = [
+      'name' => $log->label(),
+      'due_date' => $this->dateFormatter->format(
+        (int) $log->get('timestamp')->value,
+        'custom',
+        'd M Y',
+      ),
+      'status' => $log->get('status')->first()->getLabel(),
+      'workers' => $workers,
+      'equipment' => $equipment,
+      'url' => $log->toUrl()->toString(),
+      'edit_url' => $log->access('update')
+        ? $log->toUrl('edit-form', [
+          'query' => [
+            'destination' => Url::fromRoute(
+              'phoenix_plantation.workspace',
+              ['asset' => $block->id()],
+            )->toString(),
+          ],
+        ])->toString()
+        : NULL,
+    ];
   }
+
+  return $tasks;
+}
 
 }

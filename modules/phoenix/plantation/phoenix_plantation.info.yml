@@ -8,4 +8,6 @@ dependencies:
   - farm:farm_land
   - farm:farm_activity
   - farm:farm_log
+  - farm:farm_worker
+  - farm:farm_equipment
   - drupal:taxonomy
