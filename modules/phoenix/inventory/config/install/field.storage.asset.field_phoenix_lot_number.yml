@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - asset
+  enforced:
+    module:
+      - phoenix_inventory
+id: asset.field_phoenix_lot_number
+field_name: field_phoenix_lot_number
+entity_type: asset
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,9 @@
+name: Phoenix Inventory
+type: module
+description: 'Inventory and stock traceability for Phoenix OS.'
+package: Phoenix OS
+core_version_requirement: ^11
+dependencies:
+  - farm:farm_material
+  - farm:farm_inventory
+  - farm:farm_material_type
