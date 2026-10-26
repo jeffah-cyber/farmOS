@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Installation and update hooks for Phoenix Inventory.
+ */
+
+/**
+ * Configure batch metadata on Material asset displays.
+ */
+function phoenix_inventory_configure_batch_displays(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $form_storage = $entity_type_manager->getStorage('entity_form_display');
+  $form = $form_storage->load('asset.material.default');
+
+  if (!$form) {
+    $form = $form_storage->create([
+      'targetEntityType' => 'asset',
+      'bundle' => 'material',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+  }
+
+  $form->setComponent('field_phoenix_lot_number', [
+    'type' => 'string_textfield',
+    'weight' => 20,
+  ]);
+  $form->setComponent('field_phoenix_manufacture_date', [
+    'type' => 'datetime_timestamp',
+    'weight' => 21,
+  ]);
+  $form->setComponent('field_phoenix_expiry_date', [
+    'type' => 'datetime_timestamp',
+    'weight' => 22,
+  ]);
+  $form->save();
+
+  $view_storage = $entity_type_manager->getStorage('entity_view_display');
+  $view = $view_storage->load('asset.material.default');
+
+  if (!$view) {
+    $view = $view_storage->create([
+      'targetEntityType' => 'asset',
+      'bundle' => 'material',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+  }
+
+  $view->setComponent('field_phoenix_lot_number', [
+    'type' => 'string',
+    'label' => 'above',
+    'weight' => 20,
+  ]);
+  $view->setComponent('field_phoenix_manufacture_date', [
+    'type' => 'timestamp',
+    'label' => 'above',
+    'weight' => 21,
+  ]);
+  $view->setComponent('field_phoenix_expiry_date', [
+    'type' => 'timestamp',
+    'label' => 'above',
+    'weight' => 22,
+  ]);
+  $view->save();
+}
+
+/**
+ * Implements hook_install().
+ */
+function phoenix_inventory_install(): void {
+  phoenix_inventory_configure_batch_displays();
+}
+
+/**
+ * Configure batch displays on existing installations.
+ */
+function phoenix_inventory_update_10001(): void {
+  phoenix_inventory_configure_batch_displays();
+}

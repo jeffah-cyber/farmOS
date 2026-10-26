@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - asset.type.material
+    - field.storage.asset.field_phoenix_lot_number
+  enforced:
+    module:
+      - phoenix_inventory
+id: asset.material.field_phoenix_lot_number
+field_name: field_phoenix_lot_number
+entity_type: asset
+bundle: material
+label: 'Lot Number'
+description: 'Unique batch or lot identifier for this material.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
