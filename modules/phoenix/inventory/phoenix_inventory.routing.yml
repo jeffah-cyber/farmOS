@@ -1,0 +1,7 @@
+phoenix_inventory.workspace:
+  path: '/admin/phoenix/inventory'
+  defaults:
+    _controller: '\Drupal\phoenix_inventory\Controller\InventoryController::workspace'
+    _title: 'Inventory & Stock Movements'
+  requirements:
+    _permission: 'access administration pages'
