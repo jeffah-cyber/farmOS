@@ -5,3 +5,21 @@ phoenix_inventory.workspace:
     _title: 'Inventory & Stock Movements'
   requirements:
     _permission: 'access administration pages'
+
+phoenix_inventory.receive:
+  path: '/admin/phoenix/inventory/receive'
+  defaults:
+    _form: '\Drupal\phoenix_inventory\Form\StockMovementForm'
+    _title: 'Receive stock'
+    direction: 'receive'
+  requirements:
+    _permission: 'administer logs'
+
+phoenix_inventory.issue:
+  path: '/admin/phoenix/inventory/issue'
+  defaults:
+    _form: '\Drupal\phoenix_inventory\Form\StockMovementForm'
+    _title: 'Issue stock'
+    direction: 'issue'
+  requirements:
+    _permission: 'administer logs'
