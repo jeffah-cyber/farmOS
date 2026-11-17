@@ -32,7 +32,7 @@ final class StockMovementForm extends FormBase {
       throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
     }
     $form_state->set('direction', $direction);
-    $storage = $this->entityTypeManager()->getStorage('asset');
+    $storage = \Drupal::entityTypeManager()->getStorage('asset');
     $ids = $storage->getQuery()->accessCheck(TRUE)->condition('type', 'material')->sort('name')->execute();
     $options = [];
     foreach ($storage->loadMultiple($ids) as $asset) {
@@ -57,7 +57,7 @@ final class StockMovementForm extends FormBase {
       ],
       '#required' => TRUE,
     ];
-    $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadTree('unit');
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('unit');
     $units = [];
     foreach ($terms as $term) {
       $units[$term->tid] = $term->name;
@@ -96,7 +96,7 @@ final class StockMovementForm extends FormBase {
       $form_state->setErrorByName('amount', $this->t('Enter a positive quantity with at most three decimal places.'));
       return;
     }
-    $asset = $this->entityTypeManager()->getStorage('asset')->load($form_state->getValue('asset'));
+    $asset = \Drupal::entityTypeManager()->getStorage('asset')->load($form_state->getValue('asset'));
     if (!$asset || $asset->bundle() !== 'material' || !$asset->access('view')) {
       $form_state->setErrorByName('asset', $this->t('Select an accessible material batch.'));
       return;
@@ -115,7 +115,7 @@ final class StockMovementForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $manager = $this->entityTypeManager();
+    $manager = \Drupal::entityTypeManager();
     $asset = $manager->getStorage('asset')->load($form_state->getValue('asset'));
     $measure = (string) $form_state->getValue('measure');
     $units = (int) $form_state->getValue('units');
