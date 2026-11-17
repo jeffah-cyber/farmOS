@@ -40,7 +40,7 @@ final class StockMovementForm extends FormBase {
         $options[$asset->id()] = $asset->label() . ' (#' . $asset->id() . ')';
       }
     }
-    $selected = $form_state->getValue('asset');
+    $selected = $form_state->getValue('asset') ?? $form_state->getUserInput()['asset'] ?? NULL;
     $selected_asset = $selected && isset($options[$selected]) ? $storage->load($selected) : NULL;
     $pairs = $selected_asset ? $this->stockPairs($selected_asset->id()) : [];
     $single_pair = count($pairs) === 1 ? reset($pairs) : NULL;
@@ -52,7 +52,7 @@ final class StockMovementForm extends FormBase {
       '#options' => $options,
       '#empty_option' => $this->t('- Select material -'),
       '#required' => TRUE,
-      '#ajax' => ['callback' => '::refreshStockForm', 'wrapper' => 'phoenix-stock-movement-form'],
+      '#ajax' => ['callback' => '::refreshStockForm', 'wrapper' => 'phoenix-stock-movement-form', 'event' => 'change'],
     ];
     $form['measure'] = [
       '#type' => 'select',
@@ -127,6 +127,7 @@ final class StockMovementForm extends FormBase {
    * Rebuild the form when a material batch is selected.
    */
   public function refreshStockForm(array &$form, FormStateInterface $form_state): array {
+    $form_state->setRebuild(TRUE);
     return $form;
   }
 
