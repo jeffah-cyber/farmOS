@@ -69,7 +69,8 @@ final class InventoryController extends ControllerBase {
       'actions' => [
         '#theme' => 'item_list',
         '#items' => [
-          ['#type' => 'link', '#title' => $this->t('Record stock receipt or issue (Input log)'), '#url' => Url::fromRoute('entity.log.add_form', ['log_type' => 'input'])],
+          ['#type' => 'link', '#title' => $this->t('Receive stock'), '#url' => Url::fromRoute('phoenix_inventory.receive')],
+          ['#type' => 'link', '#title' => $this->t('Issue stock'), '#url' => Url::fromRoute('phoenix_inventory.issue')],
           ['#type' => 'link', '#title' => $this->t('Register material batch'), '#url' => Url::fromRoute('entity.asset.add_form', ['asset_type' => 'material'])],
         ],
       ],
