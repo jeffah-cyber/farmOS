@@ -40,16 +40,25 @@ final class StockMovementForm extends FormBase {
         $options[$asset->id()] = $asset->label() . ' (#' . $asset->id() . ')';
       }
     }
+    $selected = $form_state->getValue('asset');
+    $selected_asset = $selected && isset($options[$selected]) ? $storage->load($selected) : NULL;
+    $pairs = $selected_asset ? $this->stockPairs($selected_asset->id()) : [];
+    $single_pair = count($pairs) === 1 ? reset($pairs) : NULL;
+    $form['#prefix'] = '<div id="phoenix-stock-movement-form">';
+    $form['#suffix'] = '</div>';
     $form['asset'] = [
       '#type' => 'select',
       '#title' => $this->t('Material batch'),
       '#options' => $options,
       '#empty_option' => $this->t('- Select material -'),
       '#required' => TRUE,
+      '#ajax' => ['callback' => '::refreshStockForm', 'wrapper' => 'phoenix-stock-movement-form'],
     ];
     $form['measure'] = [
       '#type' => 'select',
       '#title' => $this->t('Quantity measure'),
+      '#default_value' => $single_pair['measure'] ?? NULL,
+      '#disabled' => $single_pair !== NULL,
       '#options' => [
         'count' => $this->t('Count'),
         'weight' => $this->t('Weight'),
@@ -66,10 +75,34 @@ final class StockMovementForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Units'),
       '#options' => $units,
+      '#default_value' => $single_pair['units'] ?? NULL,
+      '#disabled' => $single_pair !== NULL,
       '#empty_option' => $this->t('- Select unit -'),
       '#required' => TRUE,
       '#description' => $this->t('Use the same measure and unit as the existing balance for this material batch.'),
     ];
+    if ($selected_asset) {
+      if ($single_pair) {
+        $balance = $this->inventory->getInventory($selected_asset, $single_pair['measure'], $single_pair['units']);
+        $form['available'] = [
+          '#type' => 'item',
+          '#title' => $this->t('Available stock'),
+          '#markup' => $this->t('@quantity @unit', [
+            '@quantity' => $balance[0]['value'] ?? '0',
+            '@unit' => $units[$single_pair['units']] ?? '',
+          ]),
+          '#weight' => -1,
+        ];
+      }
+      elseif (count($pairs) > 1) {
+        $form['available'] = [
+          '#type' => 'item',
+          '#title' => $this->t('Available stock'),
+          '#markup' => $this->t('This batch has multiple stock units. Select the correct measure and units carefully.'),
+          '#weight' => -1,
+        ];
+      }
+    }
     $form['amount'] = [
       '#type' => 'number',
       '#title' => $this->t('Quantity'),
@@ -90,6 +123,32 @@ final class StockMovementForm extends FormBase {
     return $form;
   }
 
+  /**
+   * Rebuild the form when a material batch is selected.
+   */
+  public function refreshStockForm(array &$form, FormStateInterface $form_state): array {
+    return $form;
+  }
+
+  /**
+   * Get recorded measure/unit combinations for a material batch.
+   */
+  private function stockPairs(int|string $asset_id): array {
+    $query = \Drupal::database()->select('quantity', 'q');
+    $query->fields('q', ['measure', 'units']);
+    $query->condition('q.inventory_asset', $asset_id);
+    $query->isNotNull('q.inventory_adjustment');
+    $query->groupBy('q.measure');
+    $query->groupBy('q.units');
+    $pairs = [];
+    foreach ($query->execute() as $row) {
+      if ($row->measure && $row->units) {
+        $pairs[] = ['measure' => (string) $row->measure, 'units' => (int) $row->units];
+      }
+    }
+    return $pairs;
+  }
+
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     $amount = (string) $form_state->getValue('amount');
     if (!preg_match('/^\d+(?:\.\d{1,3})?$/', $amount) || (float) $amount <= 0) {
@@ -101,8 +160,16 @@ final class StockMovementForm extends FormBase {
       $form_state->setErrorByName('asset', $this->t('Select an accessible material batch.'));
       return;
     }
-    $measure = (string) $form_state->getValue('measure');
-    $units = (int) $form_state->getValue('units');
+    $pairs = $this->stockPairs($asset->id());
+    if (count($pairs) === 1) {
+      $pair = reset($pairs);
+      $measure = $pair['measure'];
+      $units = $pair['units'];
+    }
+    else {
+      $measure = (string) $form_state->getValue('measure');
+      $units = (int) $form_state->getValue('units');
+    }
     $balance = $this->inventory->getInventory($asset, $measure, $units);
     if ($form_state->get('direction') === 'issue') {
       if (!$balance || (float) $balance[0]['value'] < (float) $amount) {
@@ -117,8 +184,16 @@ final class StockMovementForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $manager = \Drupal::entityTypeManager();
     $asset = $manager->getStorage('asset')->load($form_state->getValue('asset'));
-    $measure = (string) $form_state->getValue('measure');
-    $units = (int) $form_state->getValue('units');
+    $pairs = $this->stockPairs($asset->id());
+    if (count($pairs) === 1) {
+      $pair = reset($pairs);
+      $measure = $pair['measure'];
+      $units = $pair['units'];
+    }
+    else {
+      $measure = (string) $form_state->getValue('measure');
+      $units = (int) $form_state->getValue('units');
+    }
     $amount = (string) $form_state->getValue('amount');
 
     // Recheck at submission. This is not a transactional concurrency lock.
