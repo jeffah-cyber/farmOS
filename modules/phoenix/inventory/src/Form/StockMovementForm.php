@@ -60,8 +60,9 @@ final class StockMovementForm extends FormBase {
       '#parents' => ['measure'],
       '#type' => 'select',
       '#title' => $this->t('Quantity measure'),
-      '#default_value' => $single_pair['measure'] ?? NULL,
+      '#default_value' => $single_pair && $single_pair['measure'] !== '' ? $single_pair['measure'] : NULL,
       '#disabled' => $single_pair !== NULL,
+      '#description' => $single_pair && $single_pair['measure'] === '' ? $this->t('Existing stock has no measure recorded. The original measure will be preserved for stock movements.') : NULL,
       '#options' => [
         'count' => $this->t('Count'),
         'weight' => $this->t('Weight'),
@@ -69,6 +70,11 @@ final class StockMovementForm extends FormBase {
       ],
       '#required' => TRUE,
     ];
+    if ($single_pair && $single_pair['measure'] === '') {
+      $form['stock_details']['measure']['#type'] = 'item';
+      $form['stock_details']['measure']['#markup'] = $this->t('Not specified (existing inventory record)');
+      unset($form['stock_details']['measure']['#options'], $form['stock_details']['measure']['#required']);
+    }
     $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('unit');
     $units = [];
     foreach ($terms as $term) {
@@ -87,7 +93,11 @@ final class StockMovementForm extends FormBase {
     ];
     if ($selected_asset) {
       if ($single_pair) {
-        $balance = $this->inventory->getInventory($selected_asset, $single_pair['measure'], $single_pair['units']);
+        $balances = $this->inventory->getInventory($selected_asset);
+        $balance = array_values(array_filter($balances, static fn (array $entry): bool => (int) ($entry['units'] ?? 0) === (int) $single_pair['units'] && (string) ($entry['measure'] ?? '') === $single_pair['measure']));
+        if (!$balance && count($balances) === 1) {
+          $balance = array_values($balances);
+        }
         $form['stock_details']['available'] = [
           '#type' => 'item',
           '#title' => $this->t('Available stock'),
@@ -147,7 +157,7 @@ final class StockMovementForm extends FormBase {
     $query->groupBy('q.units');
     $pairs = [];
     foreach ($query->execute() as $row) {
-      if ($row->measure && $row->units) {
+      if ($row->units) {
         $pairs[] = ['measure' => (string) $row->measure, 'units' => (int) $row->units];
       }
     }
