@@ -40,21 +40,24 @@ final class StockMovementForm extends FormBase {
         $options[$asset->id()] = $asset->label() . ' (#' . $asset->id() . ')';
       }
     }
-    $selected = $form_state->getValue('asset') ?? $form_state->getUserInput()['asset'] ?? NULL;
+    $selected = $form_state->getValue('asset') ?: ($form_state->getUserInput()['asset'] ?? NULL);
     $selected_asset = $selected && isset($options[$selected]) ? $storage->load($selected) : NULL;
     $pairs = $selected_asset ? $this->stockPairs($selected_asset->id()) : [];
     $single_pair = count($pairs) === 1 ? reset($pairs) : NULL;
-    $form['#prefix'] = '<div id="phoenix-stock-movement-form">';
-    $form['#suffix'] = '</div>';
     $form['asset'] = [
       '#type' => 'select',
       '#title' => $this->t('Material batch'),
       '#options' => $options,
       '#empty_option' => $this->t('- Select material -'),
       '#required' => TRUE,
-      '#ajax' => ['callback' => '::refreshStockForm', 'wrapper' => 'phoenix-stock-movement-form', 'event' => 'change'],
+      '#ajax' => ['callback' => '::refreshStockForm', 'wrapper' => 'phoenix-stock-details', 'event' => 'change'],
     ];
-    $form['measure'] = [
+    $form['stock_details'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'phoenix-stock-details'],
+    ];
+    $form['stock_details']['measure'] = [
+      '#parents' => ['measure'],
       '#type' => 'select',
       '#title' => $this->t('Quantity measure'),
       '#default_value' => $single_pair['measure'] ?? NULL,
@@ -71,7 +74,8 @@ final class StockMovementForm extends FormBase {
     foreach ($terms as $term) {
       $units[$term->tid] = $term->name;
     }
-    $form['units'] = [
+    $form['stock_details']['units'] = [
+      '#parents' => ['units'],
       '#type' => 'select',
       '#title' => $this->t('Units'),
       '#options' => $units,
@@ -84,7 +88,7 @@ final class StockMovementForm extends FormBase {
     if ($selected_asset) {
       if ($single_pair) {
         $balance = $this->inventory->getInventory($selected_asset, $single_pair['measure'], $single_pair['units']);
-        $form['available'] = [
+        $form['stock_details']['available'] = [
           '#type' => 'item',
           '#title' => $this->t('Available stock'),
           '#markup' => $this->t('@quantity @unit', [
@@ -95,7 +99,7 @@ final class StockMovementForm extends FormBase {
         ];
       }
       elseif (count($pairs) > 1) {
-        $form['available'] = [
+        $form['stock_details']['available'] = [
           '#type' => 'item',
           '#title' => $this->t('Available stock'),
           '#markup' => $this->t('This batch has multiple stock units. Select the correct measure and units carefully.'),
@@ -103,7 +107,8 @@ final class StockMovementForm extends FormBase {
         ];
       }
     }
-    $form['amount'] = [
+    $form['stock_details']['amount'] = [
+      '#parents' => ['amount'],
       '#type' => 'number',
       '#title' => $this->t('Quantity'),
       '#min' => 0.001,
@@ -127,8 +132,7 @@ final class StockMovementForm extends FormBase {
    * Rebuild the form when a material batch is selected.
    */
   public function refreshStockForm(array &$form, FormStateInterface $form_state): array {
-    $form_state->setRebuild(TRUE);
-    return $form;
+    return $form['stock_details'];
   }
 
   /**
