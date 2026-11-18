@@ -30,6 +30,9 @@ final class StockMovementForm extends FormBase {
       throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
     }
     $form_state->set('direction', $direction);
+    if (!$form_state->get('movement_token')) {
+      $form_state->set('movement_token', \Drupal::service('uuid')->generate());
+    }
     $storage = \Drupal::entityTypeManager()->getStorage('asset');
     $ids = $storage->getQuery()->accessCheck(TRUE)->condition('type', 'material')->sort('name')->execute();
     $options = [];
@@ -218,6 +221,43 @@ final class StockMovementForm extends FormBase {
       }
     }
 
+    // A cached form retains its token across retries and AJAX rebuilds.
+    $token = (string) $form_state->get('movement_token');
+    if ($token === '') {
+      $this->messenger()->addError($this->t('The form session expired. Reload the form and check inventory before retrying.'));
+      return;
+    }
+    $key = 'phoenix_inventory.movement.' . $token;
+    $lock = \Drupal::lock();
+    if (!$lock->acquire($key, 30.0)) {
+      $this->messenger()->addWarning($this->t('This stock movement is already being processed. Check inventory before retrying.'));
+      return;
+    }
+    try {
+      if (\Drupal::state()->get($key)) {
+        $this->messenger()->addWarning($this->t('This form was already submitted successfully. No additional stock movement was recorded.'));
+        $form_state->setRedirect('phoenix_inventory.workspace');
+        return;
+      }
+      $this->saveMovement($form_state, $asset, $measure, $units, $amount);
+      \Drupal::state()->set($key, TRUE);
+    }
+    catch (\Throwable $e) {
+      \Drupal::logger('phoenix_inventory')->error('Stock movement failed: @message', ['@message' => $e->getMessage()]);
+      $this->messenger()->addError($this->t('The stock movement could not be saved. Check inventory before retrying.'));
+      return;
+    }
+    finally {
+      $lock->release($key);
+    }
+    $form_state->setRedirect('phoenix_inventory.workspace');
+  }
+
+  /**
+   * Persist a movement and its log together.
+   */
+  private function saveMovement(FormStateInterface $form_state, $asset, string $measure, int $units, string $amount): void {
+    $manager = \Drupal::entityTypeManager();
     $fraction = Fraction::createFromDecimal($amount);
     $quantity = $manager->getStorage('quantity')->create([
       'type' => 'material',
@@ -249,13 +289,10 @@ final class StockMovementForm extends FormBase {
     }
     catch (\Throwable $e) {
       $transaction->rollBack();
-      \Drupal::logger('phoenix_inventory')->error('Stock movement failed: @message', ['@message' => $e->getMessage()]);
-      $this->messenger()->addError($this->t('The stock movement could not be saved. Please check the inventory before retrying.'));
-      return;
+      throw $e;
     }
     unset($transaction);
     $this->messenger()->addStatus($this->t('Stock movement recorded as Input log @id.', ['@id' => $log->id()]));
-    $form_state->setRedirect('phoenix_inventory.workspace');
   }
 
 }
