@@ -8,19 +8,17 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\farm_inventory\AssetInventoryInterface;
 use Drupal\fraction\Fraction;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Guided stock movement form backed by farmOS quantities and Input logs.
  */
 final class StockMovementForm extends FormBase {
 
-  public function __construct(
-    private readonly AssetInventoryInterface $inventory,
-  ) {}
-
-  public static function create(ContainerInterface $container): static {
-    return new static($container->get(AssetInventoryInterface::class));
+  /**
+   * Resolve the inventory service on demand so AJAX form serialization is safe.
+   */
+  private function inventory(): AssetInventoryInterface {
+    return \Drupal::service('asset.inventory');
   }
 
   public function getFormId(): string {
@@ -93,7 +91,7 @@ final class StockMovementForm extends FormBase {
     ];
     if ($selected_asset) {
       if ($single_pair) {
-        $balances = $this->inventory->getInventory($selected_asset);
+        $balances = $this->inventory()->getInventory($selected_asset);
         $balance = array_values(array_filter($balances, static fn (array $entry): bool => (int) ($entry['units'] ?? 0) === (int) $single_pair['units'] && (string) ($entry['measure'] ?? '') === $single_pair['measure']));
         if (!$balance && count($balances) === 1) {
           $balance = array_values($balances);
@@ -185,13 +183,13 @@ final class StockMovementForm extends FormBase {
       $measure = (string) $form_state->getValue('measure');
       $units = (int) $form_state->getValue('units');
     }
-    $balance = $this->inventory->getInventory($asset, $measure, $units);
+    $balance = $this->inventory()->getInventory($asset, $measure, $units);
     if ($form_state->get('direction') === 'issue') {
       if (!$balance || (float) $balance[0]['value'] < (float) $amount) {
         $form_state->setErrorByName('amount', $this->t('Insufficient stock for the selected measure and units.'));
       }
     }
-    elseif ($this->inventory->getInventory($asset) && !$balance) {
+    elseif ($this->inventory()->getInventory($asset) && !$balance) {
       $form_state->setErrorByName('units', $this->t('This batch already has stock recorded in different units or a different measure. Use the existing combination.'));
     }
   }
@@ -213,7 +211,7 @@ final class StockMovementForm extends FormBase {
 
     // Recheck at submission. This is not a transactional concurrency lock.
     if ($form_state->get('direction') === 'issue') {
-      $balance = $this->inventory->getInventory($asset, $measure, $units);
+      $balance = $this->inventory()->getInventory($asset, $measure, $units);
       if (!$balance || (float) $balance[0]['value'] < (float) $amount) {
         $this->messenger()->addError($this->t('Stock changed. The issue was not saved.'));
         return;
@@ -232,9 +230,11 @@ final class StockMovementForm extends FormBase {
       'inventory_asset' => ['target_id' => $asset->id()],
       'inventory_adjustment' => $form_state->get('direction') === 'receive' ? 'increment' : 'decrement',
     ]);
-    $quantity->save();
+    $transaction = \Drupal::database()->startTransaction();
+    try {
+      $quantity->save();
 
-    $log = $manager->getStorage('log')->create([
+      $log = $manager->getStorage('log')->create([
       'type' => 'input',
       'name' => ($form_state->get('direction') === 'receive' ? 'Stock receipt: ' : 'Stock issue: ') . $asset->label(),
       'timestamp' => \Drupal::time()->getRequestTime(),
@@ -245,7 +245,15 @@ final class StockMovementForm extends FormBase {
         'target_revision_id' => $quantity->getRevisionId(),
       ],
     ]);
-    $log->save();
+      $log->save();
+    }
+    catch (\Throwable $e) {
+      $transaction->rollBack();
+      \Drupal::logger('phoenix_inventory')->error('Stock movement failed: @message', ['@message' => $e->getMessage()]);
+      $this->messenger()->addError($this->t('The stock movement could not be saved. Please check the inventory before retrying.'));
+      return;
+    }
+    unset($transaction);
     $this->messenger()->addStatus($this->t('Stock movement recorded as Input log @id.', ['@id' => $log->id()]));
     $form_state->setRedirect('phoenix_inventory.workspace');
   }
