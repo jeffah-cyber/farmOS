@@ -91,7 +91,14 @@ final class InventoryController extends ControllerBase {
           'reset' => (string) $this->t('Stock reset'),
           default => $adjustment,
         };
-        $value = $quantity->get('value')->value ?? '';
+        // farmOS stores fractional quantities as numerator / denominator.
+        $fraction = $quantity->get('value')->first();
+        $parts = $fraction ? $fraction->getValue() : [];
+        $numerator = $parts['numerator'] ?? NULL;
+        $denominator = $parts['denominator'] ?? NULL;
+        $value = ($numerator !== NULL && is_numeric($denominator) && (float) $denominator != 0.0)
+          ? rtrim(rtrim(number_format((float) $numerator / (float) $denominator, 3, '.', ''), '0'), '.')
+          : (string) $this->t('Unknown quantity');
         $unit = '';
         if ($quantity->hasField('units') && !$quantity->get('units')->isEmpty() && $quantity->get('units')->entity) {
           $unit = $quantity->get('units')->entity->label();
