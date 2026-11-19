@@ -58,6 +58,67 @@ final class InventoryController extends ControllerBase {
       ];
     }
 
+    // Read completed Input logs and their referenced native inventory quantities.
+    // Keep the history read-only and respect entity view permissions.
+    $history_rows = [];
+    $log_storage = $this->entityTypeManager()->getStorage('log');
+    $log_ids = $log_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'input')
+      ->sort('id', 'DESC')
+      ->range(0, 200)
+      ->execute();
+
+    $asset_storage = $this->entityTypeManager()->getStorage('asset');
+    foreach ($log_storage->loadMultiple($log_ids) as $log) {
+      if (!$log->access('view') || !$log->hasField('quantity') || (string) ($log->get('status')->value ?? '') !== 'done') {
+        continue;
+      }
+      foreach ($log->get('quantity')->referencedEntities() as $quantity) {
+        if (!$quantity->hasField('inventory_asset') || $quantity->get('inventory_asset')->isEmpty()
+          || !$quantity->hasField('inventory_adjustment') || $quantity->get('inventory_adjustment')->isEmpty()) {
+          continue;
+        }
+        $asset_id = $quantity->get('inventory_asset')->target_id;
+        $asset = $asset_storage->load($asset_id);
+        if (!$asset || !$asset->access('view')) {
+          continue;
+        }
+        $adjustment = (string) $quantity->get('inventory_adjustment')->value;
+        $movement = match ($adjustment) {
+          'increment' => (string) $this->t('Receipt'),
+          'decrement' => (string) $this->t('Issue'),
+          'reset' => (string) $this->t('Stock reset'),
+          default => $adjustment,
+        };
+        $value = $quantity->get('value')->value ?? '';
+        $unit = '';
+        if ($quantity->hasField('units') && !$quantity->get('units')->isEmpty() && $quantity->get('units')->entity) {
+          $unit = $quantity->get('units')->entity->label();
+        }
+        $timestamp = $log->get('timestamp')->value ?? NULL;
+        $date = $timestamp ? \Drupal::service('date.formatter')->format((int) $timestamp, 'short') : (string) $this->t('Not recorded');
+        $owner = $log->getOwnerId() ? $this->entityTypeManager()->getStorage('user')->load($log->getOwnerId()) : NULL;
+        $staff = $owner ? $owner->getDisplayName() : (string) $this->t('Not recorded');
+        $source = $log->hasField('source') && !$log->get('source')->isEmpty()
+          ? (string) $log->get('source')->value : '';
+        $history_rows[] = [
+          'data' => [
+            ['data' => ['#plain_text' => $date]],
+            ['data' => ['#plain_text' => $asset->label() . ' (#' . $asset->id() . ')']],
+            ['data' => ['#plain_text' => $movement]],
+            ['data' => ['#plain_text' => trim($value . ' ' . $unit)]],
+            ['data' => ['#plain_text' => $staff]],
+            ['data' => ['#plain_text' => $source]],
+            ['data' => ['#type' => 'link', '#title' => '#' . $log->id(), '#url' => $log->toUrl()]],
+          ],
+        ];
+        if (count($history_rows) >= 100) {
+          break 2;
+        }
+      }
+    }
+
     return [
       'intro' => [
         '#type' => 'container',
@@ -79,6 +140,18 @@ final class InventoryController extends ControllerBase {
         '#header' => [$this->t('Material batch'), $this->t('Lot number'), $this->t('Current stock')],
         '#rows' => $rows,
         '#empty' => $this->t('No material batches available.'),
+      ],
+      'history_heading' => [
+        '#markup' => '<h2>' . $this->t('Recent stock movement history') . '</h2>',
+      ],
+      'history' => [
+        '#type' => 'table',
+        '#header' => [$this->t('Date'), $this->t('Material batch'), $this->t('Movement'), $this->t('Quantity'), $this->t('Recorded by'), $this->t('Source / purpose'), $this->t('Input log')],
+        '#rows' => $history_rows,
+        '#empty' => $this->t('No accessible completed inventory movements found in recent Input logs.'),
+      ],
+      'history_note' => [
+        '#markup' => '<p>' . $this->t('Showing up to 100 movements from the 200 most recent Input logs. Only records you can view are included.') . '</p>',
       ],
       'limit_note' => [
         '#markup' => '<p>' . $this->t('Showing up to 100 most recently created material batches.') . '</p>',
