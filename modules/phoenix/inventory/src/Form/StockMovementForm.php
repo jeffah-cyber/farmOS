@@ -33,6 +33,12 @@ final class StockMovementForm extends FormBase {
     if (!$form_state->get('movement_token')) {
       $form_state->set('movement_token', \Drupal::service('uuid')->generate());
     }
+    // Keep a stable submission identifier in the rendered form. Browser Back
+    // must resend the same identifier, even if Drupal rebuilds form state.
+    $form['movement_token'] = [
+      '#type' => 'hidden',
+      '#value' => (string) $form_state->get('movement_token'),
+    ];
     $storage = \Drupal::entityTypeManager()->getStorage('asset');
     $ids = $storage->getQuery()->accessCheck(TRUE)->condition('type', 'material')->sort('name')->execute();
     $options = [];
@@ -221,8 +227,13 @@ final class StockMovementForm extends FormBase {
       }
     }
 
-    // A cached form retains its token across retries and AJAX rebuilds.
-    $token = (string) $form_state->get('movement_token');
+    // Use the identifier that was actually posted by the browser, rather
+    // than a newly generated identifier from a rebuilt Drupal form.
+    $token = (string) ($form_state->getUserInput()['movement_token'] ?? '');
+    if (!preg_match('/^[0-9a-f-]{36}$/i', $token)) {
+      $this->messenger()->addError($this->t('Invalid stock movement form. Reload and verify inventory before retrying.'));
+      return;
+    }
     if ($token === '') {
       $this->messenger()->addError($this->t('The form session expired. Reload the form and check inventory before retrying.'));
       return;
