@@ -85,9 +85,10 @@ final class InventoryController extends ControllerBase {
           continue;
         }
         $adjustment = (string) $quantity->get('inventory_adjustment')->value;
+        $is_correction = str_starts_with((string) ($log->get('source')->value ?? ''), 'CORRECTION of Input log #');
         $movement = match ($adjustment) {
-          'increment' => (string) $this->t('Receipt'),
-          'decrement' => (string) $this->t('Issue'),
+          'increment' => (string) $this->t($is_correction ? 'Correction (+)' : 'Receipt'),
+          'decrement' => (string) $this->t($is_correction ? 'Correction (-)' : 'Issue'),
           'reset' => (string) $this->t('Stock reset'),
           default => $adjustment,
         };
@@ -139,6 +140,7 @@ final class InventoryController extends ControllerBase {
         '#items' => [
           ['#type' => 'link', '#title' => $this->t('Receive stock'), '#url' => Url::fromRoute('phoenix_inventory.receive')],
           ['#type' => 'link', '#title' => $this->t('Issue stock'), '#url' => Url::fromRoute('phoenix_inventory.issue')],
+          ['#type' => 'link', '#title' => $this->t('Correct stock'), '#url' => Url::fromRoute('phoenix_inventory.adjust')],
           ['#type' => 'link', '#title' => $this->t('Register material batch'), '#url' => Url::fromRoute('entity.asset.add_form', ['asset_type' => 'material'])],
         ],
       ],
