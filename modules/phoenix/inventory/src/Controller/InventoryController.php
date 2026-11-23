@@ -127,6 +127,19 @@ final class InventoryController extends ControllerBase {
       }
     }
 
+    $account = \Drupal::currentUser();
+    $actions = [];
+    if ($account->hasPermission('record phoenix inventory movements')) {
+      $actions[] = ['#type' => 'link', '#title' => $this->t('Receive stock'), '#url' => Url::fromRoute('phoenix_inventory.receive')];
+      $actions[] = ['#type' => 'link', '#title' => $this->t('Issue stock'), '#url' => Url::fromRoute('phoenix_inventory.issue')];
+    }
+    if ($account->hasPermission('correct phoenix inventory')) {
+      $actions[] = ['#type' => 'link', '#title' => $this->t('Correct stock'), '#url' => Url::fromRoute('phoenix_inventory.adjust')];
+    }
+    if ($account->hasPermission('create material asset entities')) {
+      $actions[] = ['#type' => 'link', '#title' => $this->t('Register material batch'), '#url' => Url::fromRoute('entity.asset.add_form', ['asset_type' => 'material'])];
+    }
+
     return [
       'intro' => [
         '#type' => 'container',
@@ -137,12 +150,7 @@ final class InventoryController extends ControllerBase {
       ],
       'actions' => [
         '#theme' => 'item_list',
-        '#items' => [
-          ['#type' => 'link', '#title' => $this->t('Receive stock'), '#url' => Url::fromRoute('phoenix_inventory.receive')],
-          ['#type' => 'link', '#title' => $this->t('Issue stock'), '#url' => Url::fromRoute('phoenix_inventory.issue')],
-          ['#type' => 'link', '#title' => $this->t('Correct stock'), '#url' => Url::fromRoute('phoenix_inventory.adjust')],
-          ['#type' => 'link', '#title' => $this->t('Register material batch'), '#url' => Url::fromRoute('entity.asset.add_form', ['asset_type' => 'material'])],
-        ],
+        '#items' => $actions,
       ],
       'stock' => [
         '#type' => 'table',
