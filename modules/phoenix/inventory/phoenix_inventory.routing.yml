@@ -4,7 +4,7 @@ phoenix_inventory.workspace:
     _controller: '\Drupal\phoenix_inventory\Controller\InventoryController::workspace'
     _title: 'Inventory & Stock Movements'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'view phoenix inventory'
 
 phoenix_inventory.receive:
   path: '/admin/phoenix/inventory/receive'
@@ -13,7 +13,7 @@ phoenix_inventory.receive:
     _title: 'Receive stock'
     direction: 'receive'
   requirements:
-    _permission: 'administer logs'
+    _permission: 'record phoenix inventory movements'
 
 phoenix_inventory.issue:
   path: '/admin/phoenix/inventory/issue'
@@ -22,7 +22,7 @@ phoenix_inventory.issue:
     _title: 'Issue stock'
     direction: 'issue'
   requirements:
-    _permission: 'administer logs'
+    _permission: 'record phoenix inventory movements'
 
 phoenix_inventory.adjust:
   path: '/admin/phoenix/inventory/adjust'
@@ -31,4 +31,4 @@ phoenix_inventory.adjust:
     _title: 'Correct stock'
     direction: 'adjust'
   requirements:
-    _permission: 'administer logs'
+    _permission: 'correct phoenix inventory'
