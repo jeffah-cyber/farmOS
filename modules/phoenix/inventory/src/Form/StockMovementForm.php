@@ -26,7 +26,7 @@ final class StockMovementForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state, string $direction = 'receive'): array {
-    if (!in_array($direction, ['receive', 'issue'], TRUE)) {
+    if (!in_array($direction, ['receive', 'issue', 'adjust'], TRUE)) {
       throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
     }
     $form_state->set('direction', $direction);
@@ -132,15 +132,38 @@ final class StockMovementForm extends FormBase {
       '#step' => 0.001,
       '#required' => TRUE,
     ];
+    if ($direction === 'adjust') {
+      $form['adjustment_direction'] = [
+        '#type' => 'radios',
+        '#title' => $this->t('Correction direction'),
+        '#options' => ['decrement' => $this->t('Reduce recorded stock'), 'increment' => $this->t('Increase recorded stock')],
+        '#default_value' => 'decrement',
+        '#required' => TRUE,
+      ];
+      $form['correction_reason'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Reason for correction'),
+        '#maxlength' => 120,
+        '#required' => TRUE,
+      ];
+      $form['reference_log'] = [
+        '#type' => 'number',
+        '#title' => $this->t('Original Input log ID'),
+        '#min' => 1,
+        '#step' => 1,
+        '#required' => TRUE,
+        '#description' => $this->t('Enter the original transaction ID being corrected.'),
+      ];
+    }
     $form['source'] = [
       '#type' => 'textfield',
-      '#title' => $direction === 'receive' ? $this->t('Supplier or source') : $this->t('Issued to / purpose'),
+      '#title' => $direction === 'receive' ? $this->t('Supplier or source') : ($direction === 'issue' ? $this->t('Issued to / purpose') : $this->t('Correction notes')),
       '#maxlength' => 255,
-      '#required' => TRUE,
+      '#required' => $direction !== 'adjust',
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $direction === 'receive' ? $this->t('Record receipt') : $this->t('Record issue'),
+      '#value' => $direction === 'receive' ? $this->t('Record receipt') : ($direction === 'issue' ? $this->t('Record issue') : $this->t('Record correction')),
     ];
     return $form;
   }
@@ -192,8 +215,28 @@ final class StockMovementForm extends FormBase {
       $measure = (string) $form_state->getValue('measure');
       $units = (int) $form_state->getValue('units');
     }
+    $direction = $form_state->get('direction');
+    if ($direction === 'adjust') {
+      $ref_id = (int) $form_state->getValue('reference_log');
+      $original = \Drupal::entityTypeManager()->getStorage('log')->load($ref_id);
+      $matches = FALSE;
+      if ($original && $original->access('view') && $original->hasField('quantity')) {
+        foreach ($original->get('quantity')->referencedEntities() as $original_quantity) {
+          if ($original_quantity->hasField('inventory_asset') && (int) ($original_quantity->get('inventory_asset')->target_id ?? 0) === (int) $asset->id()) {
+            $matches = TRUE;
+            break;
+          }
+        }
+      }
+      if (!$matches) {
+        $form_state->setErrorByName('reference_log', $this->t('Enter an accessible Input log ID for this material batch.'));
+      }
+      if (trim((string) $form_state->getValue('correction_reason')) === '') {
+        $form_state->setErrorByName('correction_reason', $this->t('A correction reason is required.'));
+      }
+    }
     $balance = $this->inventory()->getInventory($asset, $measure, $units);
-    if ($form_state->get('direction') === 'issue') {
+    if ($direction === 'issue' || ($direction === 'adjust' && $form_state->getValue('adjustment_direction') === 'decrement')) {
       if (!$balance || (float) $balance[0]['value'] < (float) $amount) {
         $form_state->setErrorByName('amount', $this->t('Insufficient stock for the selected measure and units.'));
       }
@@ -219,7 +262,7 @@ final class StockMovementForm extends FormBase {
     $amount = (string) $form_state->getValue('amount');
 
     // Recheck at submission. This is not a transactional concurrency lock.
-    if ($form_state->get('direction') === 'issue') {
+    if ($form_state->get('direction') === 'issue' || ($form_state->get('direction') === 'adjust' && $form_state->getValue('adjustment_direction') === 'decrement')) {
       $balance = $this->inventory()->getInventory($asset, $measure, $units);
       if (!$balance || (float) $balance[0]['value'] < (float) $amount) {
         $this->messenger()->addError($this->t('Stock changed. The issue was not saved.'));
@@ -269,6 +312,11 @@ final class StockMovementForm extends FormBase {
    */
   private function saveMovement(FormStateInterface $form_state, $asset, string $measure, int $units, string $amount): void {
     $manager = \Drupal::entityTypeManager();
+    $direction = $form_state->get('direction');
+    $adjustment = $direction === 'adjust' ? (string) $form_state->getValue('adjustment_direction') : ($direction === 'receive' ? 'increment' : 'decrement');
+    $source = $direction === 'adjust'
+      ? 'CORRECTION of Input log #' . (int) $form_state->getValue('reference_log') . ': ' . trim((string) $form_state->getValue('correction_reason')) . ' | ' . trim((string) $form_state->getValue('source'))
+      : (string) $form_state->getValue('source');
     $fraction = Fraction::createFromDecimal($amount);
     $quantity = $manager->getStorage('quantity')->create([
       'type' => 'material',
@@ -279,7 +327,7 @@ final class StockMovementForm extends FormBase {
       ],
       'units' => ['target_id' => $units],
       'inventory_asset' => ['target_id' => $asset->id()],
-      'inventory_adjustment' => $form_state->get('direction') === 'receive' ? 'increment' : 'decrement',
+      'inventory_adjustment' => $adjustment,
     ]);
     $transaction = \Drupal::database()->startTransaction();
     try {
@@ -287,10 +335,10 @@ final class StockMovementForm extends FormBase {
 
       $log = $manager->getStorage('log')->create([
       'type' => 'input',
-      'name' => ($form_state->get('direction') === 'receive' ? 'Stock receipt: ' : 'Stock issue: ') . $asset->label(),
+      'name' => ($direction === 'adjust' ? 'Stock correction: ' : ($direction === 'receive' ? 'Stock receipt: ' : 'Stock issue: ')) . $asset->label(),
       'timestamp' => \Drupal::time()->getRequestTime(),
       'status' => 'done',
-      'source' => (string) $form_state->getValue('source'),
+      'source' => mb_substr($source, 0, 255),
       'quantity' => [
         'target_id' => $quantity->id(),
         'target_revision_id' => $quantity->getRevisionId(),
