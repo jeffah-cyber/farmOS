@@ -23,3 +23,12 @@ phoenix_inventory.issue:
     direction: 'issue'
   requirements:
     _permission: 'administer logs'
+
+phoenix_inventory.adjust:
+  path: '/admin/phoenix/inventory/adjust'
+  defaults:
+    _form: '\Drupal\phoenix_inventory\Form\StockMovementForm'
+    _title: 'Correct stock'
+    direction: 'adjust'
+  requirements:
+    _permission: 'administer logs'
