@@ -1,0 +1,12 @@
+view phoenix inventory:
+  title: 'View Phoenix inventory'
+  description: 'View stock balances and accessible stock movement history.'
+
+record phoenix inventory movements:
+  title: 'Record Phoenix inventory receipts and issues'
+  description: 'Receive and issue material stock through Phoenix Inventory.'
+
+correct phoenix inventory:
+  title: 'Correct Phoenix inventory'
+  description: 'Record audited stock corrections against existing Input logs.'
+  restrict access: true

@@ -1,0 +1,6 @@
+phoenix_inventory.workspace:
+  title: 'Inventory & Stock Movements'
+  description: 'Receive, issue, and review Phoenix material inventory using farmOS.'
+  route_name: phoenix_inventory.workspace
+  parent: system.admin
+  weight: 15

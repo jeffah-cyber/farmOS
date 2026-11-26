@@ -1,0 +1,34 @@
+phoenix_inventory.workspace:
+  path: '/admin/phoenix/inventory'
+  defaults:
+    _controller: '\Drupal\phoenix_inventory\Controller\InventoryController::workspace'
+    _title: 'Inventory & Stock Movements'
+  requirements:
+    _permission: 'view phoenix inventory'
+
+phoenix_inventory.receive:
+  path: '/admin/phoenix/inventory/receive'
+  defaults:
+    _form: '\Drupal\phoenix_inventory\Form\StockMovementForm'
+    _title: 'Receive stock'
+    direction: 'receive'
+  requirements:
+    _permission: 'record phoenix inventory movements'
+
+phoenix_inventory.issue:
+  path: '/admin/phoenix/inventory/issue'
+  defaults:
+    _form: '\Drupal\phoenix_inventory\Form\StockMovementForm'
+    _title: 'Issue stock'
+    direction: 'issue'
+  requirements:
+    _permission: 'record phoenix inventory movements'
+
+phoenix_inventory.adjust:
+  path: '/admin/phoenix/inventory/adjust'
+  defaults:
+    _form: '\Drupal\phoenix_inventory\Form\StockMovementForm'
+    _title: 'Correct stock'
+    direction: 'adjust'
+  requirements:
+    _permission: 'correct phoenix inventory'
